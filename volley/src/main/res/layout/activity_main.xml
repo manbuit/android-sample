@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:id="@+id/editText"
+        android:hint="请输入url"
+        android:text="http://222.190.98.24:8090/help/app-web"
+        android:singleLine="true"
+        android:visibility="invisible"
+        />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="String"
+            android:id="@+id/btnStringRequest"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Json Object"
+            android:id="@+id/btnJsonRequest"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Image"
+            android:id="@+id/btnImageRequest"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:text="This is result."
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/textView"
+        android:scrollbars="vertical"
+        android:scrollbarFadeDuration="500"
+        />
+</LinearLayout>
