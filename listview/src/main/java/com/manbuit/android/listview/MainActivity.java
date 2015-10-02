@@ -1,5 +1,6 @@
 package com.manbuit.android.listview;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,10 +24,9 @@ public class MainActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.listView);
 
-        list.add("测试数据1");
-        list.add("测试数据2");
-        list.add("测试数据3");
-        list.add("测试数据4");
+        list.add("自定义布局");
+        list.add("自定义对象");
+        list.add("自定义对象和布局");
         ArrayAdapter arrayAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_expandable_list_item_1,
@@ -38,6 +38,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
                 Toast.makeText(MainActivity.this,list.get(position), Toast.LENGTH_SHORT).show();
+                switch(position){
+                    case 0:
+                        startActivity(new Intent(MainActivity.this,ActivityCustomListItemLayout.class));
+                        break;
+                    case 1:
+                        startActivity(new Intent(MainActivity.this,ActivityCustomListItemObject.class));
+                        break;
+                    case 2:
+                        startActivity(new Intent(MainActivity.this,ActivityCustomListItemObjectAndLayout.class));
+                        break;
+                    default: break;
+                }
             }
         });
     }
