@@ -54,12 +54,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
 
         global = (StdApp) getApplication();
 
         mQueue = Volley.newRequestQueue(LoginActivity.this);
-
-        setContentView(R.layout.activity_login);
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
 
@@ -159,7 +158,8 @@ public class LoginActivity extends AppCompatActivity {
                                 showProgress(false);
 
                                 Intent intent = new Intent();
-                                intent.setClass(LoginActivity.this, TestActivity.class);
+                                //intent.setClass(LoginActivity.this, TestActivity.class);
+                                intent.setClass(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                             }
                             catch (Exception e){

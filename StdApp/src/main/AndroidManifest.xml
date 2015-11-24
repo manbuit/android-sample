@@ -26,6 +26,14 @@
         </activity>
         <activity android:name=".TestActivity" >
         </activity>
+        <activity android:name=".MainActivity" >
+        </activity>
+        <activity android:name=".AccountFragment" >
+        </activity>
+        <activity android:name=".FavoriteFragment" >
+        </activity>
+        <activity android:name=".OtherFragment" >
+        </activity>
     </application>
 
 </manifest>
