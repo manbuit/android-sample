@@ -25,4 +25,14 @@ public class StdApp extends Application {
         super.onCreate();
         setMyContext(new LinkedHashMap()); //初始化上下文变量
     }
+
+    public String getDataLoadUrl() {
+//        return "http://222.190.98.24:8099/api/data/load";
+        return "http://192.168.1.70:8080/api/data/load";
+    }
+
+    public String getLoginCheckUrl() {
+//        return "http://222.190.98.24:8099/logincheck?json";
+        return "http://192.168.1.70:8080/logincheck?json";
+    }
 }

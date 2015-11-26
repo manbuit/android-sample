@@ -141,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
             StringRequest stringRequest = new StringRequest(
                     Request.Method.POST,
                     //editText.getText().toString(),
-                    "http://222.190.98.24:8099/logincheck?json",
+                    global.getLoginCheckUrl(),
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String s) {
@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                                     String key = (String) it.next();
                                     global.getMyContext().put(key,data.get(key));
                                 }
-                                Toast.makeText(LoginActivity.this,global.getMyContext().get("token").toString(),Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(LoginActivity.this,global.getMyContext().get("token").toString(),Toast.LENGTH_SHORT).show();
                                 showProgress(false);
 
                                 Intent intent = new Intent();
@@ -184,7 +184,7 @@ public class LoginActivity extends AppCompatActivity {
                     map.put("password", password);
                     return map;
                 }
-            };   ;
+            };
             mQueue.add(stringRequest);
 
             //Toast.makeText(LoginActivity.this, "等待登录结果...", Toast.LENGTH_SHORT);
