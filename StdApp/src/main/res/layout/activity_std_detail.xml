@@ -13,18 +13,17 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="code"
+        android:text=""
         android:id="@+id/detail_tv_code" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="name"
+        android:text=""
         android:id="@+id/detail_tv_name" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="files"
         android:id="@+id/detail_tv_files" />
 </LinearLayout>

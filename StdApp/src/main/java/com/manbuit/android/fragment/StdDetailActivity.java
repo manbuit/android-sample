@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,10 +19,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.manbuit.android.fragment.adapter.StdFileListAdapter;
+import com.manbuit.android.fragment.adapter.StdListAdapter;
 import com.manbuit.android.fragment.dataRequest.DataRequest;
 import com.manbuit.android.fragment.dataRequest.DataRequestUnit;
 import com.manbuit.android.fragment.dataRequest.Filter;
 import com.manbuit.android.fragment.model.StdEntity;
+import com.manbuit.android.fragment.model.StdFileEntity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,20 +43,36 @@ public class StdDetailActivity extends AppCompatActivity {
     TextView tvName;
     ListView tvFiles;
 
+    List<StdFileEntity> stdFileEntities;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_std_detail);
 
+        global = (StdApp)getApplication();
+
         tvCode = (TextView) findViewById(R.id.detail_tv_code);
         tvName = (TextView) findViewById(R.id.detail_tv_name);
         tvFiles = (ListView) findViewById(R.id.detail_tv_files);
 
-        global = (StdApp)getApplication();
+        tvFiles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intent = new Intent();
+                intent.putExtra("fileId", stdFileEntities.get(position).getId());
+                intent.putExtra("fileName", stdFileEntities.get(position).getName());
+                intent.setClassName(StdDetailActivity.this, "com.manbuit.android.fragment.StdFilePdfActivity");
+                startActivity(intent);
+            }
+        });
+
 
         Intent intent = getIntent();
         final String stdId = intent.getStringExtra("stdId");
 
+        stdFileEntities = new ArrayList<>();
 
         final Handler loadDataHandler = new Handler(){
             public void handleMessage(Message msg){
@@ -63,16 +84,24 @@ public class StdDetailActivity extends AppCompatActivity {
 
 
                     JSONArray files = result.getJSONObject("files").getJSONArray("data");
-                    List<String> _files = new ArrayList<>();
+                    //List<String> _files = new ArrayList<>();
                     for(int i=0;i< files.length();i++){
-                        _files.add(files.getJSONObject(i).getString("name"));
+                        //_files.add(files.getJSONObject(i).getString("name"));
+                        JSONObject item = files.getJSONObject(i);
+                        String id = item.getString("id");
+                        String name = item.getString("name");
+                        StdFileEntity stdFileEntity = new StdFileEntity(id,name);
+                        stdFileEntities.add(stdFileEntity);
                     }
-                    ArrayAdapter arrayAdapter = new ArrayAdapter<String>(
+
+                    StdFileListAdapter adapter = new StdFileListAdapter(StdDetailActivity.this,stdFileEntities);
+                    /*ArrayAdapter adapter = new ArrayAdapter<String>(
                             StdDetailActivity.this,
-                            android.R.layout.simple_expandable_list_item_1,
+                            //android.R.layout.simple_expandable_list_item_1,
+                            android.R.layout.simple_list_item_1,
                             _files
-                    );
-                    tvFiles.setAdapter(arrayAdapter);
+                    );*/
+                    tvFiles.setAdapter(adapter);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

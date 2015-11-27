@@ -26,13 +26,22 @@ public class StdApp extends Application {
         setMyContext(new LinkedHashMap()); //初始化上下文变量
     }
 
-    public String getDataLoadUrl() {
-        return "http://222.190.98.24:8099/api/data/load";
-//        return "http://192.168.1.70:8080/api/data/load";
-    }
+    //private final static String BASEURL = "192.168.1.70:8080";
+    private final static String BASEURL = "222.190.98.24:8099";
+
+    private final static String LOGINURL = "http://%s/logincheck?json";
+    private final static String DATAURL = "http://%s/api/data/load";
+    private final static String FILEURL = "http://%s/api/file/download";
 
     public String getLoginCheckUrl() {
-        return "http://222.190.98.24:8099/logincheck?json";
-//        return "http://192.168.1.70:8080/logincheck?json";
+        return String.format(LOGINURL,BASEURL);
+    }
+
+    public String getDataLoadUrl() {
+        return String.format(DATAURL,BASEURL);
+    }
+
+    public String getFileDownloadUrl() {
+        return String.format(FILEURL,BASEURL);
     }
 }

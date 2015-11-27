@@ -1,24 +1,18 @@
 package com.manbuit.android.fragment;
 
-import android.app.Fragment;
 import android.app.ListFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -27,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.manbuit.android.fragment.adapter.StdListAdapter;
 import com.manbuit.android.fragment.dataRequest.DataRequest;
 import com.manbuit.android.fragment.dataRequest.DataRequestUnit;
 import com.manbuit.android.fragment.dataRequest.Filter;
@@ -65,10 +60,10 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
                     String name = item.getString("name");
                     StdEntity stdEntity = new StdEntity(id,code,name);
                     stdEntities.add(stdEntity);
-
-                    adapter = new StdListAdapter(getActivity(),stdEntities);
-                    setListAdapter(adapter);
                 }
+
+                adapter = new StdListAdapter(getActivity(),stdEntities);
+                setListAdapter(adapter);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
