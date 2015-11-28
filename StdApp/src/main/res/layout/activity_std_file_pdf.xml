@@ -12,8 +12,8 @@
         android:id="@+id/stdFilePdf"
         android:text="PDF"
         />
-    <com.joanzapata.pdfview.PDFView
+    <!--<com.joanzapata.pdfview.PDFView
         android:id="@+id/pdfview"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"/>
+        android:layout_height="fill_parent"/>-->
 </RelativeLayout>

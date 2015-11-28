@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.joanzapata.pdfview.PDFView;
+//import com.joanzapata.pdfview.PDFView;
 import com.manbuit.android.fragment.utils.FileUtils;
 
 import org.json.JSONObject;
@@ -26,7 +26,7 @@ public class StdFilePdfActivity extends AppCompatActivity {
     StdApp global;
 
     TextView stdFilePdf;
-    PDFView pdfView;
+    //PDFView pdfView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class StdFilePdfActivity extends AppCompatActivity {
 
         global = (StdApp) getApplication();
 
-        stdFilePdf = (TextView) findViewById(R.id.stdFilePdf);
+        /*stdFilePdf = (TextView) findViewById(R.id.stdFilePdf);
         pdfView = (PDFView) findViewById(R.id.pdfview);
 
         Intent intent = getIntent();
@@ -89,6 +89,6 @@ public class StdFilePdfActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        }).start();*/
     }
 }
