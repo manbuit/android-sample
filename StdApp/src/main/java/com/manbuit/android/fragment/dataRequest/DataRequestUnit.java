@@ -104,7 +104,9 @@ public class DataRequestUnit {
             }
             jsonObject.put("params", params);
 
-            jsonObject.put("filter", filter.toJSON());
+            if(filter!= null) {
+                jsonObject.put("filter", filter.toJSON());
+            }
 
             jsonObject.put("process", getProcess());
 
