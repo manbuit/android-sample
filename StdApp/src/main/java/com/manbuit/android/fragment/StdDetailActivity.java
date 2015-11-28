@@ -2,6 +2,7 @@ package com.manbuit.android.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -26,11 +27,18 @@ import com.manbuit.android.fragment.dataRequest.DataRequestUnit;
 import com.manbuit.android.fragment.dataRequest.Filter;
 import com.manbuit.android.fragment.model.StdEntity;
 import com.manbuit.android.fragment.model.StdFileEntity;
+import com.manbuit.android.fragment.utils.FileUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,11 +68,57 @@ public class StdDetailActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent();
+                final String fileId = stdFileEntities.get(position).getId();
+                final String fileName = stdFileEntities.get(position).getName();
+
+                //用应用内的pdfViewer打开
+                /*Intent intent = new Intent();
                 intent.putExtra("fileId", stdFileEntities.get(position).getId());
                 intent.putExtra("fileName", stdFileEntities.get(position).getName());
                 intent.setClassName(StdDetailActivity.this, "com.manbuit.android.fragment.StdFilePdfActivity");
-                startActivity(intent);
+                startActivity(intent);*/
+
+                //用第三方应用查看pdf
+                /*Uri fileUri = Uri.parse(String.format(global.getFileDownloadUrl()+"/%s;jsessionid=%s.pdf",fileId,global.getMyContext().get("token")));
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setAction(Intent.ACTION_VIEW);
+                //intent.setDataAndType(Uri.fromFile(resultFile), "application/pdf");
+                intent.setDataAndType(fileUri, "application/pdf");
+                startActivity(intent);*/
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String urlString = String.format(global.getFileDownloadUrl()+"/%s;jsessionid=%s",fileId,global.getMyContext().get("token"));
+                        try {
+                            URL url = new URL(urlString);
+                            HttpURLConnection conn=(HttpURLConnection)url.openConnection();
+
+                            InputStream input = conn.getInputStream();
+                            FileUtils fileUtils = new FileUtils();
+                            File resultFile=fileUtils.write2SDFromInput("/jyjy/", fileName, input);
+
+                            //Toast.makeText(StdFilePdfActivity.this,"下载成功:"+resultFile.getName(),Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(StdFilePdfActivity.this,"下载成功",Toast.LENGTH_SHORT).show();
+                            System.out.println("下载成功！！！！！");
+                            System.out.println(resultFile.getAbsolutePath());
+
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.setAction(Intent.ACTION_VIEW);
+                            intent.setDataAndType(Uri.fromFile(resultFile), "application/pdf");
+                            startActivity(intent);
+
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
             }
         });
 
