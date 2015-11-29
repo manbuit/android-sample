@@ -69,7 +69,7 @@ public class StdListAdapter extends BaseAdapter {
 
         StdEntity stdEntity = (StdEntity) this.getItem(position);
         codeView.setText(stdEntity.getCode());
-        nameView.setText(stdEntity.getName());
+        nameView.setText(String.format("《%s》",stdEntity.getName()));
 
         return view;
     }
