@@ -54,12 +54,51 @@ public class StdDetailActivity extends AppCompatActivity {
 
     List<StdFileEntity> stdFileEntities;
 
+    RequestQueue queue;
+
+
+    final Handler loadDataHandler = new Handler(){
+        public void handleMessage(Message msg){
+            JSONObject result = (JSONObject) msg.obj;
+            try {
+                JSONObject root = result.getJSONObject("root");
+                tvCode.setText(root.getString("code"));
+                tvName.setText(root.getString("name"));
+
+
+                JSONArray files = result.getJSONObject("files").getJSONArray("data");
+                //List<String> _files = new ArrayList<>();
+                for(int i=0;i< files.length();i++){
+                    //_files.add(files.getJSONObject(i).getString("name"));
+                    JSONObject item = files.getJSONObject(i);
+                    String id = item.getString("id");
+                    String name = item.getString("name");
+                    StdFileEntity stdFileEntity = new StdFileEntity(id,name);
+                    stdFileEntities.add(stdFileEntity);
+                }
+
+                StdFileListAdapter adapter = new StdFileListAdapter(StdDetailActivity.this,stdFileEntities);
+                    /*ArrayAdapter adapter = new ArrayAdapter<String>(
+                            StdDetailActivity.this,
+                            //android.R.layout.simple_expandable_list_item_1,
+                            android.R.layout.simple_list_item_1,
+                            _files
+                    );*/
+                tvFiles.setAdapter(adapter);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_std_detail);
 
         global = (StdApp)getApplication();
+
+        queue = Volley.newRequestQueue(StdDetailActivity.this);
 
         tvCode = (TextView) findViewById(R.id.detail_tv_code);
         tvName = (TextView) findViewById(R.id.detail_tv_name);
@@ -109,6 +148,7 @@ public class StdDetailActivity extends AppCompatActivity {
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.setAction(Intent.ACTION_VIEW);
                             intent.setDataAndType(Uri.fromFile(resultFile), "application/pdf");
+                            // TODO 电子标准不一定是PDF
                             startActivity(intent);
 
                         } catch (MalformedURLException e) {
@@ -129,40 +169,6 @@ public class StdDetailActivity extends AppCompatActivity {
 
         stdFileEntities = new ArrayList<>();
 
-        final Handler loadDataHandler = new Handler(){
-            public void handleMessage(Message msg){
-                JSONObject result = (JSONObject) msg.obj;
-                try {
-                    JSONObject root = result.getJSONObject("root");
-                    tvCode.setText(root.getString("code"));
-                    tvName.setText(root.getString("name"));
-
-
-                    JSONArray files = result.getJSONObject("files").getJSONArray("data");
-                    //List<String> _files = new ArrayList<>();
-                    for(int i=0;i< files.length();i++){
-                        //_files.add(files.getJSONObject(i).getString("name"));
-                        JSONObject item = files.getJSONObject(i);
-                        String id = item.getString("id");
-                        String name = item.getString("name");
-                        StdFileEntity stdFileEntity = new StdFileEntity(id,name);
-                        stdFileEntities.add(stdFileEntity);
-                    }
-
-                    StdFileListAdapter adapter = new StdFileListAdapter(StdDetailActivity.this,stdFileEntities);
-                    /*ArrayAdapter adapter = new ArrayAdapter<String>(
-                            StdDetailActivity.this,
-                            //android.R.layout.simple_expandable_list_item_1,
-                            android.R.layout.simple_list_item_1,
-                            _files
-                    );*/
-                    tvFiles.setAdapter(adapter);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -177,27 +183,9 @@ public class StdDetailActivity extends AppCompatActivity {
                                 )
                         )
                 );
-                /*{
-                    Filter AND = new Filter();
-                    AND.setExp("and");
-                    AND.setLeaf(false);
-                    List<Filter> AND_children = new ArrayList<Filter>();
-                    AND.setChildren(AND_children);
-                    {
-                        Filter filter = new Filter();
-                        filter.setExp("id");
-                        filter.setValue("'" + stdId + "'");
-                        filter.setOperate("=");
-                        filter.setType("string");
-                        AND_children.add(filter);
-                    }
-
-                    root.setFilter(AND);
-                }*/
                 dataRequest.getRoot().add(root);
 
                 DataRequestUnit files = new DataRequestUnit();
-                //files.setDs("b12da205-2ce4-ce8b-ce13-f6fc40f944f1");
                 files.setDs("b8b1dc9d-ec45-a057-f062-4238063267b4");
                 files.setFilter(
                         new Filter("and", null, null, null,
@@ -206,65 +194,9 @@ public class StdDetailActivity extends AppCompatActivity {
                                 )
                         )
                 );
-                /*{
-                    Filter AND = new Filter();
-                    AND.setExp("and");
-                    AND.setLeaf(false);
-                    List<Filter> AND_children = new ArrayList<Filter>();
-                    AND.setChildren(AND_children);
-                    {
-                        Filter filter = new Filter();
-                        filter.setExp("jyjy_std");
-                        filter.setValue("'" + stdId + "'");
-                        filter.setOperate("=");
-                        filter.setType("string");
-                        AND_children.add(filter);
-                    }
-
-                    files.setFilter(AND);
-                }*/
                 dataRequest.getNodes().put("files",files);
 
-                RequestQueue queue = Volley.newRequestQueue(StdDetailActivity.this);
-
-                String url = String.format("%s;jsessionid=%s", global.getDataLoadUrl(), global.getMyContext().get("token"));
-                StringRequest request = new StringRequest(
-                        Request.Method.POST,
-                        url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String s) {
-                                //Toast.makeText(LoginActivity.this,s,Toast.LENGTH_SHORT).show();
-                                try {
-                                    JSONObject result = new JSONObject(s);
-                                    //JSONObject root = result.getJSONObject("root");
-                                    //Toast.makeText(getActivity(),data.get("totalCount").toString(),Toast.LENGTH_SHORT).show();
-                                    Message msg = new Message();
-                                    msg.obj = result;
-                                    loadDataHandler.sendMessage(msg);
-                                }
-                                catch (Exception e){
-                                    e.printStackTrace();
-                                    Toast.makeText(StdDetailActivity.this,e.toString(),Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
-                                //showProgress(false);
-                                Toast.makeText(StdDetailActivity.this, volleyError.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                ){
-                    @Override
-                    protected Map<String, String> getParams() {
-                        //在这里设置需要post的参数
-                        Map<String, String> map = new HashMap<String, String>();
-                        map.put("dr", dataRequest.toJSON().toString());
-                        return map;
-                    }
-                };
+                Request request = dataRequest.genRequest(global.getMyContext().get("token").toString(),loadDataHandler);
                 queue.add(request);
             }
         }).start();

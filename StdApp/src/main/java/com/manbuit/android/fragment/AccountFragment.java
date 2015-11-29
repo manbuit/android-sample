@@ -54,7 +54,7 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
     final Handler loadDataHandler = new Handler(){
         public void handleMessage(Message msg){
 
-            stdEntities = new ArrayList<>();
+            //stdEntities = new ArrayList<>();
             try {
                 JSONObject result = (JSONObject) msg.obj;
                 JSONObject data = result.getJSONObject("data");
@@ -69,8 +69,6 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
                     stdEntities.add(stdEntity);
                 }
 
-                adapter = new StdListAdapter(getActivity(),stdEntities);
-                setListAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 accountLayout.setRefreshing(false);
             } catch (JSONException e) {
@@ -79,7 +77,7 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
         }
     };
 
-    void loadData(final Handler handler) {
+    void loadData(int start, int limit, final Handler handler) {
         accountLayout.setRefreshing(true);
 
         final DataRequest dataRequest = new DataRequest();
@@ -92,8 +90,8 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
                 new OrderBy("orderNo2",true),
                 new OrderBy("orderNo3",true)
         ));
-        data.setStart(0);
-        data.setLimit(20);
+        data.setStart(start);
+        data.setLimit(limit);
 
         dataRequest.getNodes().put("data", data);
 
@@ -130,25 +128,37 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
         accountListView = getListView();
         stdEntities = new ArrayList<>();
 
+        adapter = new StdListAdapter(getActivity(),stdEntities);
+        setListAdapter(adapter);
+
         queue = Volley.newRequestQueue(getActivity());
 
         //http://fredericosilva.net/blog/listview-with-swiperefreshlayout-and-autoload/
+        //http://blog.csdn.net/appte/article/details/10795401
         accountListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            private int lastItemIndex;//当前ListView中最后一个Item的索引
             @Override
-            public void onScrollStateChanged(AbsListView arg0, int arg1) {
-                // TODO Auto-generated method stub
+            public void onScrollStateChanged(AbsListView arg0, int scrollState) {
+                System.out.println("onScrollStateChanged");
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
+                        && lastItemIndex == adapter.getCount() - 1) {
+                    System.out.println(String.format("onScrollStateChanged LastVisiblePosition: %d", accountListView.getLastVisiblePosition()));
 
+                    // TODO 这里需要"加载更多"的代码
+                    loadData(adapter.getCount(),20,loadDataHandler);
+                }
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (accountListView.getCount() != 0
+                lastItemIndex = firstVisibleItem + visibleItemCount - 1;
+                System.out.println(String.format("onScroll LastVisiblePosition: %d", accountListView.getLastVisiblePosition()));
+                /*if (accountListView.getCount() != 0
                         && accountListView.getLastVisiblePosition() >= (accountListView.getCount() - 1) - 2) {
-                    // TODO 这里需要加载更多的代码
                     // Do what you need to get more content.
                     //Toast.makeText(getActivity(), "加载更多...", Toast.LENGTH_SHORT).show();
                     System.out.println(String.format("LastVisiblePosition: %d", accountListView.getLastVisiblePosition()));
-                }
+                }*/
             }
         });
 
@@ -163,7 +173,7 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
             }
         });
 
-        loadData(loadDataHandler);
+        loadData(0,20,loadDataHandler);
     }
 
     @Override
@@ -180,6 +190,6 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
                 },
                 3000
         );*/
-        loadData(loadDataHandler);
+        loadData(0,20,loadDataHandler);
     }
 }
