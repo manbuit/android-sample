@@ -190,6 +190,7 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
                 },
                 3000
         );*/
+        stdEntities.clear();
         loadData(0,20,loadDataHandler);
     }
 }

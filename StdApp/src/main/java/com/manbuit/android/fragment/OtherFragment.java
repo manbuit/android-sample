@@ -102,7 +102,7 @@ public class OtherFragment extends Fragment {
                             final String apkFileId = root.getString("apk");
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setTitle("title");
+                            builder.setTitle("版本检测");
                             PackageInfo info = null;
                             try {
                                 info = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(),0);
@@ -111,7 +111,7 @@ public class OtherFragment extends Fragment {
                             }
                             if(rev.equals(info.versionName)) {
                                 builder.setMessage(
-                                        String.format("本机版本：%s\r\n最新版本：%s\r\n\r\n版本相同，不需要更新。", info.versionName, rev)
+                                        String.format("本机：%s\r\n最新：%s\r\n\r\n版本相同，不需要更新。", info.versionName, rev)
                                 );
                                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
