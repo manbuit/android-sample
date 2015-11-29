@@ -4,14 +4,24 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Color;
+import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatCallback;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.view.ActionMode;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity
+        //extends Activity
+        extends AppCompatActivity
+        implements View.OnClickListener/*, AppCompatCallback*/ {
 
     AccountFragment accountFragment;
     FavoriteFragment favoriteFragment;
@@ -22,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView tvFavorite;
     TextView tvStdDB;
     TextView tvOther;
+    //Toolbar toolbar;
 
     private FragmentManager fragmentManager;
 
@@ -30,6 +41,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
+        //Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
+        /*toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // Handle the menu item
+                return true;
+            }
+        });
+        // Inflate a menu to be displayed in the toolbar
+        toolbar.inflateMenu(R.menu.menu_main);*/
+
+/*        delegate = AppCompatDelegate.create(this, this);
+//we need to call the onCreate() of the AppCompatDelegate
+        delegate.onCreate(savedInstanceState);
+//we use the delegate to inflate the layout
+        delegate.setContentView(R.layout.activity_main);
+//Finally, let's add the Toolbar
+        Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
+        delegate.setSupportActionBar(toolbar);*/
 
         fragmentManager = getFragmentManager();
 
@@ -44,10 +76,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvOther.setOnClickListener(this);
 
         setTabSelection(0);
-    }
-
-    private void initView() {
-
     }
 
     @Override
@@ -154,4 +182,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             transaction.hide(otherFragment);
         }
     }
+
+/*    @Override
+    public void onSupportActionModeStarted(ActionMode mode) {
+
+    }
+
+    @Override
+    public void onSupportActionModeFinished(ActionMode mode) {
+
+    }
+
+    @Nullable
+    @Override
+    public ActionMode onWindowStartingSupportActionMode(ActionMode.Callback callback) {
+        return null;
+    }*/
 }

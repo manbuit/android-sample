@@ -62,11 +62,11 @@ public class StdFileListAdapter extends BaseAdapter {
 
         //((TextView)textView).setText(person.getName());
 
-        TextView idView = (TextView) ((LinearLayout)view).findViewById(R.id.sliFileId);
+        //TextView idView = (TextView) ((LinearLayout)view).findViewById(R.id.sliFileId);
         TextView nameView = (TextView) ((LinearLayout)view).findViewById(R.id.sliFileName);
 
         StdFileEntity stdFileEntity = (StdFileEntity) this.getItem(position);
-        idView.setText(stdFileEntity.getId());
+        //idView.setText(stdFileEntity.getId());
         nameView.setText(stdFileEntity.getName());
 
         return view;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.manbuit.android.fragment"
-    android:versionName="1.0.151129.1515"
+    android:versionName="1.0.151129.2126"
     android:versionCode="1"
     >
 
@@ -18,7 +18,8 @@
     <application
         android:name=".StdApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_jyjy"
+
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:screenOrientation="portrait"
@@ -35,12 +36,17 @@
         <activity android:name=".TestActivity" >
         </activity>
         <activity android:name=".MainActivity"
-            android:configChanges="orientation|screenSize">
+            android:configChanges="orientation|screenSize"><!--android:configChanges="orientation|screenSize"必须，否则屏幕旋转会重影-->
         </activity>
         <activity android:name=".StdDetailActivity" >
         </activity>
         <activity android:name=".StdFilePdfActivity" >
         </activity>
+        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

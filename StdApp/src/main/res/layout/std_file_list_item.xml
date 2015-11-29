@@ -5,12 +5,13 @@
     android:orientation="vertical"
     >
 
-    <TextView
+    <!--<TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sliFileId"
         android:text="文件id"
-        />
+        android:visibility="invisible"
+        />-->
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

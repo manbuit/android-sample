@@ -72,7 +72,7 @@ public class StdDetailActivity extends AppCompatActivity {
                     //_files.add(files.getJSONObject(i).getString("name"));
                     JSONObject item = files.getJSONObject(i);
                     String id = item.getString("id");
-                    String name = item.getString("name");
+                    String name = String.format("《%s》",item.getString("name"));
                     StdFileEntity stdFileEntity = new StdFileEntity(id,name);
                     stdFileEntities.add(stdFileEntity);
                 }
