@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    RequestQueue mQueue;
+    RequestQueue queue;
 
     private StdApp global;
 
@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
 
         global = (StdApp) getApplication();
 
-        mQueue = Volley.newRequestQueue(LoginActivity.this);
+        queue = Volley.newRequestQueue(LoginActivity.this);
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
 
@@ -185,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
                     return map;
                 }
             };
-            mQueue.add(stringRequest);
+            queue.add(stringRequest);
 
             //Toast.makeText(LoginActivity.this, "等待登录结果...", Toast.LENGTH_SHORT);
         }

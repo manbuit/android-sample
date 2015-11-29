@@ -33,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,10 +49,16 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
     BaseAdapter adapter;
     List<StdEntity> stdEntities;
 
+    RequestQueue queue;
+
     final Handler loadDataHandler = new Handler(){
         public void handleMessage(Message msg){
-            JSONObject data = (JSONObject) msg.obj;
+
+            stdEntities = new ArrayList<>();
             try {
+                JSONObject result = (JSONObject) msg.obj;
+                JSONObject data = result.getJSONObject("data");
+
                 JSONArray dataList = data.getJSONArray("data");
                 for(int i = 0; i<dataList.length();i++){
                     JSONObject item = dataList.getJSONObject(i);
@@ -64,11 +71,38 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
 
                 adapter = new StdListAdapter(getActivity(),stdEntities);
                 setListAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                accountLayout.setRefreshing(false);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     };
+
+    void loadData(final Handler handler) {
+        accountLayout.setRefreshing(true);
+
+        final DataRequest dataRequest = new DataRequest();
+        DataRequestUnit data = new DataRequestUnit();
+
+        data.setDs("12814070-5537-b95c-e4f9-abfc0d460765");
+        data.setOrderbies(Arrays.asList(
+                new OrderBy("category_orderNo",true),
+                new OrderBy("orderNo1",true),
+                new OrderBy("orderNo2",true),
+                new OrderBy("orderNo3",true)
+        ));
+        data.setStart(0);
+        data.setLimit(20);
+
+        dataRequest.getNodes().put("data", data);
+
+        Request request = dataRequest.genRequest(
+                global.getMyContext().get("token").toString(),
+                loadDataHandler
+        );
+        queue.add(request);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,6 +130,8 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
         accountListView = getListView();
         stdEntities = new ArrayList<>();
 
+        queue = Volley.newRequestQueue(getActivity());
+
         //http://fredericosilva.net/blog/listview-with-swiperefreshlayout-and-autoload/
         accountListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -108,6 +144,7 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (accountListView.getCount() != 0
                         && accountListView.getLastVisiblePosition() >= (accountListView.getCount() - 1) - 2) {
+                    // TODO 这里需要加载更多的代码
                     // Do what you need to get more content.
                     //Toast.makeText(getActivity(), "加载更多...", Toast.LENGTH_SHORT).show();
                     System.out.println(String.format("LastVisiblePosition: %d", accountListView.getLastVisiblePosition()));
@@ -126,115 +163,12 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
             }
         });
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final DataRequest dataRequest = new DataRequest();
-                DataRequestUnit data = new DataRequestUnit();
-                data.setDs("12814070-5537-b95c-e4f9-abfc0d460765"); //角色
-
-                {
-                    Filter AND = new Filter();
-                    AND.setExp("and");
-                    AND.setLeaf(false);
-                    List<Filter> AND_children = new ArrayList<Filter>();
-                    AND.setChildren(AND_children);
-                    {
-                        Filter filter = new Filter();
-                        filter.setExp("code");
-                        filter.setValue("'系统'");
-                        filter.setOperate(">");
-                        filter.setType("string");
-                        //AND_children.add(filter);
-                    }
-                    {
-                        Filter filter = new Filter();
-                        filter.setExp("name");
-                        filter.setValue("'员'");
-                        filter.setOperate(">");
-                        filter.setType("string");
-                        //AND_children.add(filter);
-                    }
-
-                    data.setFilter(AND);
-                }
-                {
-                    List<OrderBy> orderBies = new ArrayList<OrderBy>();
-
-                    OrderBy categoryOrderNo = new OrderBy();
-                    //categoryOrderNo.setExp("(select orderNo from jyjy_std_category where id=rptSql.category)");
-                    categoryOrderNo.setExp("category_orderNo");
-                    categoryOrderNo.setAsc(true);
-                    orderBies.add(categoryOrderNo);
-
-                    OrderBy orderNo1 = new OrderBy();
-                    orderNo1.setExp("orderNo1");
-                    orderNo1.setAsc(true);
-                    orderBies.add(orderNo1);
-
-                    OrderBy orderNo2 = new OrderBy();
-                    orderNo2.setExp("orderNo2");
-                    orderNo2.setAsc(true);
-                    orderBies.add(orderNo2);
-
-                    OrderBy orderNo3 = new OrderBy();
-                    orderNo3.setExp("orderNo3");
-                    orderNo3.setAsc(true);
-                    orderBies.add(orderNo3);
-
-                    data.setOrderbies(orderBies);
-                }
-
-                dataRequest.getNodes().put("data", data);
-
-                RequestQueue queue = Volley.newRequestQueue(getActivity());
-
-                String url = String.format("%s;jsessionid=%s", global.getDataLoadUrl(), global.getMyContext().get("token"));
-                StringRequest request = new StringRequest(
-                        Request.Method.POST,
-                        url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String s) {
-                                //Toast.makeText(LoginActivity.this,s,Toast.LENGTH_SHORT).show();
-                                try {
-                                    JSONObject result = new JSONObject(s);
-                                    JSONObject data = result.getJSONObject("data");
-                                    //Toast.makeText(getActivity(),data.get("totalCount").toString(),Toast.LENGTH_SHORT).show();
-                                    Message msg = new Message();
-                                    msg.obj = data;
-                                    loadDataHandler.sendMessage(msg);
-                                }
-                                catch (Exception e){
-                                    e.printStackTrace();
-                                    Toast.makeText(getActivity(),e.toString(),Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
-                                //showProgress(false);
-                                Toast.makeText(getActivity(), volleyError.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                ){
-                    @Override
-                    protected Map<String, String> getParams() {
-                        //在这里设置需要post的参数
-                        Map<String, String> map = new HashMap<String, String>();
-                        map.put("dr", dataRequest.toJSON().toString());
-                        return map;
-                    }
-                };
-                queue.add(request);
-            }
-        }).start();
+        loadData(loadDataHandler);
     }
 
     @Override
     public void onRefresh() {
-        accountLayout.setRefreshing(true);
+        /*accountLayout.setRefreshing(true);
         Toast.makeText(getActivity(), "重新刷新...", Toast.LENGTH_SHORT).show();
 
         (new Handler()).postDelayed(
@@ -245,6 +179,7 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
                     }
                 },
                 3000
-        );
+        );*/
+        loadData(loadDataHandler);
     }
 }

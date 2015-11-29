@@ -12,6 +12,16 @@ public class OrderBy {
     private String name;
     private boolean asc;
 
+    public OrderBy(String exp, String name, boolean asc) {
+        this.setExp(exp);
+        this.setName(name);
+        this.setAsc(asc);
+    }
+
+    public OrderBy(String exp, boolean asc) {
+        this(exp,null,asc);
+    }
+
     public String getExp() {
         return exp;
     }

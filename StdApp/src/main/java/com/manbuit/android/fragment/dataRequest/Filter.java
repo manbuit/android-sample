@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,7 +20,21 @@ public class Filter {
     private String summary ;
     private boolean leaf = true ;
     private boolean expanded = false ;
-    private List<Filter> children = new LinkedList<Filter>();
+    private List<Filter> children = new ArrayList<>();
+
+    public Filter(String exp,String type,String operate,String value,List<Filter> children){
+        this.setExp(exp);
+        this.setType(type);
+        this.setOperate(operate);
+        this.setValue(value);
+        if(children!=null) {
+            this.setChildren(children);
+        }
+
+        if(children!=null && children.size()>0) {
+            this.setLeaf(false);
+        }
+    }
 
     public String getName() {
         return name;

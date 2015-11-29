@@ -40,6 +40,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -169,7 +170,14 @@ public class StdDetailActivity extends AppCompatActivity {
 
                 DataRequestUnit root = new DataRequestUnit();
                 root.setDs("12814070-5537-b95c-e4f9-abfc0d460765");
-                {
+                root.setFilter(
+                        new Filter("and", null, null, null,
+                                Arrays.asList(
+                                        new Filter("id","string","=","'" + stdId + "'",null)
+                                )
+                        )
+                );
+                /*{
                     Filter AND = new Filter();
                     AND.setExp("and");
                     AND.setLeaf(false);
@@ -185,13 +193,20 @@ public class StdDetailActivity extends AppCompatActivity {
                     }
 
                     root.setFilter(AND);
-                }
+                }*/
                 dataRequest.getRoot().add(root);
 
                 DataRequestUnit files = new DataRequestUnit();
                 //files.setDs("b12da205-2ce4-ce8b-ce13-f6fc40f944f1");
                 files.setDs("b8b1dc9d-ec45-a057-f062-4238063267b4");
-                {
+                files.setFilter(
+                        new Filter("and", null, null, null,
+                                Arrays.asList(
+                                        new Filter("jyjy_std", "string", "=", "'" + stdId + "'", null)
+                                )
+                        )
+                );
+                /*{
                     Filter AND = new Filter();
                     AND.setExp("and");
                     AND.setLeaf(false);
@@ -207,7 +222,7 @@ public class StdDetailActivity extends AppCompatActivity {
                     }
 
                     files.setFilter(AND);
-                }
+                }*/
                 dataRequest.getNodes().put("files",files);
 
                 RequestQueue queue = Volley.newRequestQueue(StdDetailActivity.this);
