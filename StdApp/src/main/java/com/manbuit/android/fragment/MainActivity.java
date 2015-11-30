@@ -1,10 +1,17 @@
 package com.manbuit.android.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +27,25 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+import com.manbuit.android.fragment.dataRequest.DataRequest;
+import com.manbuit.android.fragment.dataRequest.DataRequestUnit;
+import com.manbuit.android.fragment.dataRequest.OrderBy;
+import com.manbuit.android.fragment.utils.FileUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
+
 public class MainActivity
         //extends Activity
         extends AppCompatActivity
@@ -28,13 +54,15 @@ public class MainActivity
     AccountFragment accountFragment;
     FavoriteFragment favoriteFragment;
     StdDBFragment stdDBFragment;
-    OtherFragment otherFragment;
 
     TextView tvAccount;
     TextView tvFavorite;
     TextView tvStdDB;
-    TextView tvOther;
-    //Toolbar toolbar;
+    Toolbar toolbar;
+
+    StdApp global;
+
+    RequestQueue queue;
 
     private FragmentManager fragmentManager;
 
@@ -44,40 +72,148 @@ public class MainActivity
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
-        //Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
+        global = (StdApp) getApplication();
+
+        queue = Volley.newRequestQueue(MainActivity.this);
+
+        Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
+        //toolbar.setTitle("JYJY");
+        // Inflate a menu to be displayed in the toolbar
+        toolbar.inflateMenu(R.menu.menu_main);
         //setSupportActionBar(toolbar);
-        /*toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 // Handle the menu item
+                //Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
+                switch (item.getItemId()){
+                    case R.id.action_update:
+                        //Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
+                        update();
+                        break;
+                    case R.id.action_logout:
+                        Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
+                        break;
+                    default: break;
+                }
                 return true;
             }
         });
-        // Inflate a menu to be displayed in the toolbar
-        toolbar.inflateMenu(R.menu.menu_main);*/
-
-/*        delegate = AppCompatDelegate.create(this, this);
-//we need to call the onCreate() of the AppCompatDelegate
-        delegate.onCreate(savedInstanceState);
-//we use the delegate to inflate the layout
-        delegate.setContentView(R.layout.activity_main);
-//Finally, let's add the Toolbar
-        Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
-        delegate.setSupportActionBar(toolbar);*/
 
         fragmentManager = getFragmentManager();
 
         tvAccount = (TextView) findViewById(R.id.tvAccount);
         tvFavorite = (TextView) findViewById(R.id.tvFavorite);
         tvStdDB = (TextView) findViewById(R.id.tvStdDB);
-        tvOther = (TextView) findViewById(R.id.tvOther);
 
         tvAccount.setOnClickListener(this);
         tvFavorite.setOnClickListener(this);
         tvStdDB.setOnClickListener(this);
-        tvOther.setOnClickListener(this);
 
         setTabSelection(0);
+    }
+
+    private void update(){
+
+        final DataRequest dataRequest = new DataRequest();
+
+        DataRequestUnit data = new DataRequestUnit();
+        data.setDs("cc405ad5-7db7-279f-a2e8-7a96dd45135f"); //角色
+        data.setOrderbies(Arrays.asList(
+                new OrderBy("cTimeStamp", false)
+        ));
+
+        dataRequest.getRoot().add(data);
+
+        Request request = dataRequest.genRequest(global.getMyContext().get("token").toString(),new Handler(){
+            public void handleMessage(Message msg) {
+                JSONObject result = (JSONObject) msg.obj;
+
+                JSONObject root = null;
+                try {
+                    root = result.getJSONObject("root");
+                    final String rev = root.getString("rev");
+                    final String apkFileId = root.getString("apk");
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("版本检测");
+                    PackageInfo info = null;
+                    try {
+                        info = getPackageManager().getPackageInfo(getPackageName(),0);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    if(rev.equals(info.versionName)) {
+                        builder.setMessage(
+                                String.format("本机：%s\r\n最新：%s\r\n\r\n版本相同，不需要更新。", info.versionName, rev)
+                        );
+                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Toast.makeText(getActivity(), "确定", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    else {
+                        builder.setMessage(
+                                String.format("本机版本：%s\r\n最新版本：%s\r\n\r\n确定更新到最新版本吗？", info.versionName, rev)
+                        );
+                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Toast.makeText(getActivity(), "确定", Toast.LENGTH_SHORT).show();
+
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        String urlString = String.format(global.getFileDownloadUrl()+"/%s;jsessionid=%s",apkFileId,global.getMyContext().get("token"));
+                                        try {
+                                            URL url = new URL(urlString);
+                                            HttpURLConnection conn=(HttpURLConnection)url.openConnection();
+                                            String fileName = String.format("jyjy_std_%s.apk",rev);
+
+                                            InputStream input = conn.getInputStream();
+                                            FileUtils fileUtils = new FileUtils();
+                                            File resultFile=fileUtils.write2SDFromInput("/jyjy/", fileName, input);
+
+                                            //Toast.makeText(StdFilePdfActivity.this,"下载成功:"+resultFile.getName(),Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(StdFilePdfActivity.this,"下载成功",Toast.LENGTH_SHORT).show();
+                                            System.out.println("下载成功！！！！！");
+                                            System.out.println(resultFile.getAbsolutePath());
+
+                                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                                            intent.setDataAndType(Uri.fromFile(new File(resultFile.getAbsolutePath())),
+                                                    "application/vnd.android.package-archive");
+                                            startActivity(intent);
+
+                                        } catch (MalformedURLException e) {
+                                            e.printStackTrace();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }).start();
+                            }
+                        });
+                        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(MainActivity.this, "取消更新", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    builder.create().show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        queue.add(request);
     }
 
     @Override
@@ -94,10 +230,6 @@ public class MainActivity
             case R.id.tvStdDB:
                 //Toast.makeText(MainActivity.this, "tvStdDB", Toast.LENGTH_SHORT).show();
                 setTabSelection(2);
-                break;
-            case R.id.tvOther:
-                //Toast.makeText(MainActivity.this, "tvOther", Toast.LENGTH_SHORT).show();
-                setTabSelection(3);
                 break;
             default:
                 Toast.makeText(MainActivity.this, "nothing", Toast.LENGTH_SHORT).show();
@@ -140,19 +272,11 @@ public class MainActivity
                     transaction.show(stdDBFragment);
                 }
                 break;
-            case 3:
-                tvOther.setBackgroundColor(Color.WHITE);
-                if (otherFragment == null) {
-                    otherFragment = new OtherFragment();
-                    transaction.add(R.id.content, otherFragment);
-                } else {
-                    transaction.show(otherFragment);
-                }
-                break;
             default:
                 break;
         }
         transaction.commit();
+        //toolbar.setTitle("部门台账"); //toolbar为空
     }
 
     /**
@@ -162,7 +286,6 @@ public class MainActivity
         tvAccount.setBackgroundColor(Color.parseColor("#AACCEE"));
         tvFavorite.setBackgroundColor(Color.parseColor("#AACCEE"));
         tvStdDB.setBackgroundColor(Color.parseColor("#AACCEE"));
-        tvOther.setBackgroundColor(Color.parseColor("#AACCEE"));
     }
 
     /**
@@ -179,9 +302,6 @@ public class MainActivity
         }
         if (stdDBFragment != null) {
             transaction.hide(stdDBFragment);
-        }
-        if (otherFragment != null) {
-            transaction.hide(otherFragment);
         }
     }
 

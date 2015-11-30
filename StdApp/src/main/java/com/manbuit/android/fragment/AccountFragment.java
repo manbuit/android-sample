@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,6 +43,7 @@ import java.util.Map;
 
 public class AccountFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener {
 //public class AccountFragment extends SwipeRefreshListFragment {
+    final static int PAGE_SIZE = 50;
 
     private StdApp global;
 
@@ -52,6 +54,8 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
     List<StdEntity> stdEntities;
 
     RequestQueue queue;
+
+    Toolbar toolbar;
 
     final Handler loadDataHandler = new Handler(){
         public void handleMessage(Message msg){
@@ -124,6 +128,10 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
 
         global = (StdApp) getActivity().getApplication();
 
+        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        //toolbar.setTitle("部门台账");
+        toolbar.setTitle("标准查询");
+
         accountLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.accountLayout);
         accountLayout.setOnRefreshListener(this);
 
@@ -147,7 +155,7 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
                     System.out.println(String.format("onScrollStateChanged LastVisiblePosition: %d", accountListView.getLastVisiblePosition()));
 
                     // TODO 这里需要"加载更多"的代码
-                    loadData(adapter.getCount(),20,loadDataHandler);
+                    loadData(adapter.getCount(),PAGE_SIZE,loadDataHandler);
                 }
             }
 
@@ -175,7 +183,7 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
             }
         });
 
-        loadData(0,20,loadDataHandler);
+        loadData(0,PAGE_SIZE,loadDataHandler);
     }
 
     @Override
@@ -193,6 +201,6 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
                 3000
         );*/
         stdEntities.clear();
-        loadData(0,20,loadDataHandler);
+        loadData(0, PAGE_SIZE, loadDataHandler);
     }
 }

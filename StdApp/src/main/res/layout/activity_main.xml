@@ -11,12 +11,11 @@
     android:orientation="vertical"
     tools:context="com.manbuit.android.fragment.MainActivity">
 
-    <!--<android.support.design.widget.AppBarLayout
+    <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/appbar_padding_top"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -24,11 +23,11 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
-
+            app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            >
         </android.support.v7.widget.Toolbar>
 
-    </android.support.design.widget.AppBarLayout>-->
+    </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
         android:id="@+id/content"
@@ -81,22 +80,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="标准总库"
-            android:textColor="#333"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:layout_margin="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textAlignment="center"
-            />
-        <TextView
-            android:id="@+id/tvOther"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="关于我们"
             android:textColor="#333"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"

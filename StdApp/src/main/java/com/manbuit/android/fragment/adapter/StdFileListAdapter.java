@@ -67,7 +67,7 @@ public class StdFileListAdapter extends BaseAdapter {
 
         StdFileEntity stdFileEntity = (StdFileEntity) this.getItem(position);
         //idView.setText(stdFileEntity.getId());
-        nameView.setText(stdFileEntity.getName());
+        nameView.setText(String.format("《%s》",stdFileEntity.getName()));
 
         return view;
     }

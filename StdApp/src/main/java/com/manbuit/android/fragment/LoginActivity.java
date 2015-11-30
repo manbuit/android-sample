@@ -15,8 +15,10 @@ import android.database.Cursor;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -43,7 +45,7 @@ import java.util.Map;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    RequestQueue queue;
+    private RequestQueue queue;
 
     private StdApp global;
 
@@ -52,8 +54,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-
-    SharedPreferences sp;
+    private Toolbar mToolbar;
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,12 @@ public class LoginActivity extends AppCompatActivity {
         queue = Volley.newRequestQueue(LoginActivity.this);
 
         sp = getSharedPreferences("mysp", Context.MODE_PRIVATE);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        //mToolbar.setTitle(R.string.app_name);
+        mToolbar.setTitle("  "+getResources().getString(R.string.app_name));
+        mToolbar.setLogo(R.mipmap.ic_jyjy);
+        setSupportActionBar(mToolbar);
 
         mUsernameView = (EditText) findViewById(R.id.username);
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -93,6 +101,14 @@ public class LoginActivity extends AppCompatActivity {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
+
+    /*@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //return super.onCreateOptionsMenu(menu);
+
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }*/
 
     private void restoreUsernameAndPassword() {
 
