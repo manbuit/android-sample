@@ -93,7 +93,10 @@ public class MainActivity
                         update();
                         break;
                     case R.id.action_logout:
-                        Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent();
+                        intent.setClass(MainActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
                         break;
                     default: break;
                 }

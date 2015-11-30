@@ -3,7 +3,9 @@ package com.manbuit.android.fragment;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -132,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
 
         SharedPreferences.Editor e = sp.edit();
         e.putString(key_username,username);
-        e.putString(key_password,password);
+        e.putString(key_password, password);
 
         e.commit();
     }
@@ -242,6 +244,37 @@ public class LoginActivity extends AppCompatActivity {
 
             //Toast.makeText(LoginActivity.this, "等待登录结果...", Toast.LENGTH_SHORT);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK && event.getRepeatCount()==0){
+            showExitTips();
+            return false;
+        }
+        return false;
+    }
+
+    private void showExitTips() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setMessage("确定退出吗?");
+        builder.setTitle("提示");
+        builder.setPositiveButton("确定",
+                new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                    }
+                });
+        builder.setNegativeButton("取消",
+                new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
     }
 
     /**
