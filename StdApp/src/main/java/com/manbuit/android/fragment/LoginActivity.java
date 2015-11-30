@@ -3,7 +3,9 @@ package com.manbuit.android.fragment;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -51,6 +53,8 @@ public class LoginActivity extends AppCompatActivity {
     private View mProgressView;
     private View mLoginFormView;
 
+    SharedPreferences sp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,10 +63,14 @@ public class LoginActivity extends AppCompatActivity {
         global = (StdApp) getApplication();
 
         queue = Volley.newRequestQueue(LoginActivity.this);
-        // Set up the login form.
-        mUsernameView = (EditText) findViewById(R.id.username);
 
+        sp = getSharedPreferences("mysp", Context.MODE_PRIVATE);
+
+        mUsernameView = (EditText) findViewById(R.id.username);
         mPasswordView = (EditText) findViewById(R.id.password);
+        
+        restoreUsernameAndPassword();
+
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -86,6 +94,33 @@ public class LoginActivity extends AppCompatActivity {
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    private void restoreUsernameAndPassword() {
+
+        String key_username = getResources().getString(R.string.key_username);
+        String key_password = getResources().getString(R.string.key_password);
+
+        String username = sp.getString(key_username, null);
+        String password = sp.getString(key_password, null);
+
+        mUsernameView.setText(username);
+        mPasswordView.setText(password);
+    }
+
+    private void saveUsernameAndPassword() {
+
+        String key_username = getResources().getString(R.string.key_username);
+        String key_password = getResources().getString(R.string.key_password);
+
+        final String username = mUsernameView.getText().toString();
+        final String password = mPasswordView.getText().toString();
+
+        SharedPreferences.Editor e = sp.edit();
+        e.putString(key_username,username);
+        e.putString(key_password,password);
+
+        e.commit();
+    }
+
     /**
      * Callback received when a permissions request has been completed.
      */
@@ -105,6 +140,8 @@ public class LoginActivity extends AppCompatActivity {
         // Reset errors.
         mUsernameView.setError(null);
         mPasswordView.setError(null);
+
+        saveUsernameAndPassword();
 
         // Store values at the time of the login attempt.
         final String username = mUsernameView.getText().toString();

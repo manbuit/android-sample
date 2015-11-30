@@ -24,7 +24,7 @@
                     android:layout_height="wrap_content" android:hint="@string/prompt_email"
                     android:inputType="text" android:maxLines="1"
                     android:singleLine="true"
-                    android:text="admin" />
+                    />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -36,7 +36,7 @@
                     android:imeActionId="@+id/login"
                     android:imeOptions="actionUnspecified" android:inputType="textPassword"
                     android:maxLines="1" android:singleLine="true"
-                    android:text="123" />
+                    />
 
             </android.support.design.widget.TextInputLayout>
 

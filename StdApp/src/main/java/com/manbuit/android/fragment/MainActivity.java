@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatCallback;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -182,6 +184,16 @@ public class MainActivity
             transaction.hide(otherFragment);
         }
     }
+
+    // TODO 实现菜单
+    /*@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //return super.onCreateOptionsMenu(menu);
+
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }*/
+
 
 /*    @Override
     public void onSupportActionModeStarted(ActionMode mode) {

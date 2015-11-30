@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">标准有效性控制管理系统</string>
+    <string name="app_name">标准有效性控制管理</string>
     
     <!-- Strings related to login -->
     <string name="prompt_email">请输入用户名</string>
@@ -15,4 +15,7 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_test">TestActivity</string>
+
+    <string name="key_username">KEY_SP_USERNAME</string>
+    <string name="key_password">KEY_SP_PASSWORD</string>
 </resources>
