@@ -1,6 +1,7 @@
 package com.manbuit.android.fragment.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,14 @@ public class StdListAdapter extends BaseAdapter {
 
         StdEntity stdEntity = (StdEntity) this.getItem(position);
         codeView.setText(stdEntity.getCode());
-        nameView.setText(String.format("《%s》",stdEntity.getName()));
+        //nameView.setText(String.format("《%s》",stdEntity.getName()));
+        nameView.setText(String.format("%s",stdEntity.getName()));
+        if(stdEntity.getStatus().equals("作废")){
+            codeView.setTextColor(Color.rgb(255, 0, 0));
+        }
+        else {
+            codeView.setTextColor(Color.rgb(0, 255, 0));
+        }
 
         return view;
     }

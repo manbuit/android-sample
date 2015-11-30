@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatCallback;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -60,6 +61,8 @@ public class MainActivity
     TextView tvStdDB;
     Toolbar toolbar;
 
+    SearchView searchView;
+
     StdApp global;
 
     RequestQueue queue;
@@ -76,11 +79,26 @@ public class MainActivity
 
         queue = Volley.newRequestQueue(MainActivity.this);
 
-        Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
+        toolbar= (Toolbar) findViewById(R.id.toolbar);
         //toolbar.setTitle("JYJY");
         // Inflate a menu to be displayed in the toolbar
         toolbar.inflateMenu(R.menu.menu_main);
         //setSupportActionBar(toolbar);
+
+        /*searchView = (SearchView) toolbar.getMenu().findItem(R.id.action_search).getActionView();
+        //searchView.setIconified(false); //处于显示SearchView的状态
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                doSearch(newText);
+                return true;
+            }
+        });*/
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -222,16 +240,16 @@ public class MainActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.tvStdDB:
+                //Toast.makeText(MainActivity.this, "tvStdDB", Toast.LENGTH_SHORT).show();
+                setTabSelection(0);
+                break;
             case R.id.tvAccount:
                 //Toast.makeText(MainActivity.this, "tvAccount", Toast.LENGTH_SHORT).show();
-                setTabSelection(0);
+                setTabSelection(1);
                 break;
             case R.id.tvFavorite:
                 //Toast.makeText(MainActivity.this, "tvFavorite", Toast.LENGTH_SHORT).show();
-                setTabSelection(1);
-                break;
-            case R.id.tvStdDB:
-                //Toast.makeText(MainActivity.this, "tvStdDB", Toast.LENGTH_SHORT).show();
                 setTabSelection(2);
                 break;
             default:
@@ -249,6 +267,15 @@ public class MainActivity
         hideFragments(transaction);
         switch (index) {
             case 0:
+                tvStdDB.setBackgroundColor(Color.WHITE);
+                if (stdDBFragment == null) {
+                    stdDBFragment = new StdDBFragment();
+                    transaction.add(R.id.content, stdDBFragment);
+                } else {
+                    transaction.show(stdDBFragment);
+                }
+                break;
+            case 1:
                 tvAccount.setBackgroundColor(Color.WHITE);
                 if (accountFragment == null) {
                     accountFragment = new AccountFragment();
@@ -257,22 +284,13 @@ public class MainActivity
                     transaction.show(accountFragment);
                 }
                 break;
-            case 1:
+            case 2:
                 tvFavorite.setBackgroundColor(Color.WHITE);
                 if (favoriteFragment == null) {
                     favoriteFragment = new FavoriteFragment();
                     transaction.add(R.id.content, favoriteFragment);
                 } else {
                     transaction.show(favoriteFragment);
-                }
-                break;
-            case 2:
-                tvStdDB.setBackgroundColor(Color.WHITE);
-                if (stdDBFragment == null) {
-                    stdDBFragment = new StdDBFragment();
-                    transaction.add(R.id.content, stdDBFragment);
-                } else {
-                    transaction.show(stdDBFragment);
                 }
                 break;
             default:

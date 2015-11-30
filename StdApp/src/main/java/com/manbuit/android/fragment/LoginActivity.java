@@ -213,7 +213,6 @@ public class LoginActivity extends AppCompatActivity {
                                 showProgress(false);
 
                                 Intent intent = new Intent();
-                                //intent.setClass(LoginActivity.this, TestActivity.class);
                                 intent.setClass(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                             }

@@ -16,6 +16,16 @@ public class Column {
     private String summary ;
     private Column[] children ;
 
+    public Column(String exp,String code) {
+        this.setExp(exp);
+        this.setCode(code);
+    }
+
+    public Column(String exp) {
+        this.setExp(exp);
+        this.setCode(exp);
+    }
+
     public String getName() {
         return name;
     }
