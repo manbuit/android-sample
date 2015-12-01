@@ -105,12 +105,12 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
                 new OrderBy("orderNo2", true),
                 new OrderBy("orderNo3", true)
         ));
-        data.setFilter(new Filter("orgId","string","!=","NULL",null));
         data.setStart(start);
         data.setLimit(limit);
 
+        List<Filter> filters = new ArrayList<>();
+        filters.add(new Filter("orgId","string","!=","NULL",null));
         if(searchText!=null && searchText.trim().length()>0) {
-            List<Filter> filters = new ArrayList<>();
             for (String seg : searchText.trim().replaceAll(" +", " ").split(" ")) {
                 if (seg.length() > 0) {
                     Filter filter = new Filter("or", null, null, null,
@@ -122,8 +122,8 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
                     filters.add(filter);
                 }
             }
-            data.setFilter(new Filter("and", null, null, null, filters));
         }
+        data.setFilter(new Filter("and", null, null, null, filters));
 
         dataRequest.getNodes().put("data", data);
 
@@ -207,6 +207,7 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
             @Override
             public boolean onQueryTextSubmit(String query) {
                 doSearch(query);
+                searchView.clearFocus();
                 return false;
             }
 
