@@ -53,19 +53,16 @@ public class StdFileListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        //return cities.length;
         return stdFileEntities.size();
     }
 
     @Override
     public StdFileEntity getItem(int position) {
-        //return cities[position];
         return stdFileEntities.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        //return position;
         return position;
     }
 
@@ -74,21 +71,12 @@ public class StdFileListAdapter extends BaseAdapter {
 
         View view = convertView;
         if(view == null) {
-            /*view = LayoutInflater
-                    .from(ActivityCustomListItemObjectAndLayout.this)
-                    .inflate(R.layout.std_list_item, null);*/
-
             view = mInflater.inflate(R.layout.std_file_list_item, null);
         }
 
-        //((TextView)textView).setText(person.getName());
-
-        //TextView idView = (TextView) ((LinearLayout)view).findViewById(R.id.sliFileId);
         TextView nameView = (TextView) ((LinearLayout)view).findViewById(R.id.sliFileName);
 
         StdFileEntity stdFileEntity = (StdFileEntity) this.getItem(position);
-        //idView.setText(stdFileEntity.getId());
-        //nameView.setText(String.format("《%s》",stdFileEntity.getName()));
         nameView.setText(stdFileEntity.getName());
 
         return view;

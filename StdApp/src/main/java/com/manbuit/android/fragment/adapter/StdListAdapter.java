@@ -14,6 +14,10 @@ import com.manbuit.android.fragment.dataRequest.DataRequest;
 import com.manbuit.android.fragment.dataRequest.DataRequestUnit;
 import com.manbuit.android.fragment.dataRequest.Filter;
 import com.manbuit.android.fragment.model.StdEntity;
+import com.manbuit.android.fragment.model.StdFileEntity;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,21 +37,38 @@ public class StdListAdapter extends BaseAdapter {
         this.stdEntities = stdEntities;
     }
 
+    public StdListAdapter(Context context, JSONArray jsonArray) throws Exception{
+        super();
+
+        List<StdEntity> stdEntities = new ArrayList<StdEntity>();
+        for(int i=0;i< jsonArray.length();i++){
+            JSONObject item = jsonArray.getJSONObject(i);
+            String id = item.getString("id");
+            String code = item.getString("code");
+            String name = item.getString("name");
+            //String status = item.getString("status");
+            StdEntity stdEntity = new StdEntity(id,code,name,null);
+            stdEntities.add(stdEntity);
+        }
+
+        mInflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        this.stdEntities = stdEntities;
+    }
+
     @Override
     public int getCount() {
-        //return cities.length;
         return stdEntities.size();
     }
 
     @Override
     public StdEntity getItem(int position) {
-        //return cities[position];
         return stdEntities.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        //return position;
         return position;
     }
 
@@ -56,14 +77,8 @@ public class StdListAdapter extends BaseAdapter {
 
         View view = convertView;
         if(view == null) {
-            /*view = LayoutInflater
-                    .from(ActivityCustomListItemObjectAndLayout.this)
-                    .inflate(R.layout.std_list_item, null);*/
-
             view = mInflater.inflate(R.layout.std_list_item, null);
         }
-
-        //((TextView)textView).setText(person.getName());
 
         TextView codeView = (TextView) ((LinearLayout)view).findViewById(R.id.sliCode);
         TextView nameView = (TextView) ((LinearLayout)view).findViewById(R.id.sliName);
@@ -72,11 +87,12 @@ public class StdListAdapter extends BaseAdapter {
         codeView.setText(stdEntity.getCode());
         //nameView.setText(String.format("《%s》",stdEntity.getName()));
         nameView.setText(String.format("%s",stdEntity.getName()));
-        if(stdEntity.getStatus().equals("作废")){
-            codeView.setTextColor(Color.rgb(255, 0, 0));
-        }
-        else {
-            codeView.setTextColor(Color.rgb(0, 255, 0));
+        if(stdEntity.getStatus()!=null) {
+            if (stdEntity.getStatus().equals("作废")) {
+                codeView.setTextColor(Color.rgb(255, 0, 0));
+            } else {
+                codeView.setTextColor(Color.rgb(0, 255, 0));
+            }
         }
 
         return view;

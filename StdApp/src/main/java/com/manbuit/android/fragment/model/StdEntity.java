@@ -9,7 +9,7 @@ public class StdEntity {
     private String name;
     private String status;
 
-    public StdEntity(String id,String code, String name, String status){
+    public StdEntity(String id, String code, String name, String status){
         this.setId(id);
         this.setCode(code);
         this.setName(name);

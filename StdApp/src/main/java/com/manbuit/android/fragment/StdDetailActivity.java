@@ -51,7 +51,8 @@ import java.util.Map;
 
 public class StdDetailActivity extends AppCompatActivity {
 
-    private StdApp global;
+    StdApp global;
+
     TextView tvCode;
     TextView tvName;
     TextView tvCategory;
@@ -60,11 +61,10 @@ public class StdDetailActivity extends AppCompatActivity {
     TextView tvFzrq;
     TextView tvSummary;
     ListView tvFiles;
-
-    List<StdFileEntity> stdFileEntities;
+    ListView tvOldVers;
+    ListView tvNewVers;
 
     RequestQueue queue;
-
 
     final Handler loadDataHandler = new Handler(){
         public void handleMessage(Message msg){
@@ -90,21 +90,25 @@ public class StdDetailActivity extends AppCompatActivity {
                 tvSsrq.setText(
                         String.format(
                                 "实施日期：%s",
-                                root.get("ssrq")!=null && !root.getString("ssrq").equals("null") ? format.format(new Date(root.getLong("ssrq"))) : ""
+                                root.get("ssrq") != null && !root.getString("ssrq").equals("null") ? format.format(new Date(root.getLong("ssrq"))) : ""
                         )
                 );
                 tvFzrq.setText(
                         String.format(
                                 "废止日期：%s",
-                                root.get("fzrq")!=null && !root.getString("fzrq").equals("null") ? format.format(new Date(root.getLong("fzrq"))) : ""
+                                root.get("fzrq") != null && !root.getString("fzrq").equals("null") ? format.format(new Date(root.getLong("fzrq"))) : ""
                         )
                 );
-                tvSummary.setText(root.getString("summary"));
+                tvSummary.setText(root.getString("summary").equals("null")?"":root.getString("summary"));
 
                 JSONArray files = result.getJSONObject("files").getJSONArray("data");
-                StdFileListAdapter adapter = new StdFileListAdapter(StdDetailActivity.this,files);
-                tvFiles.setAdapter(adapter);
+                tvFiles.setAdapter(new StdFileListAdapter(StdDetailActivity.this,files));
 
+                JSONArray oldVers = result.getJSONObject("oldVers").getJSONArray("data");
+                tvOldVers.setAdapter(new StdListAdapter(StdDetailActivity.this,oldVers));
+
+                JSONArray newVers = result.getJSONObject("newVers").getJSONArray("data");
+                tvNewVers.setAdapter(new StdListAdapter(StdDetailActivity.this,newVers));
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -123,6 +127,8 @@ public class StdDetailActivity extends AppCompatActivity {
 
         queue = Volley.newRequestQueue(StdDetailActivity.this);
 
+        final String stdId = getIntent().getStringExtra("stdId");
+
         tvCode = (TextView) findViewById(R.id.detail_tv_code);
         tvName = (TextView) findViewById(R.id.detail_tv_name);
         tvCategory = (TextView) findViewById(R.id.detail_tv_category);
@@ -131,13 +137,17 @@ public class StdDetailActivity extends AppCompatActivity {
         tvFzrq = (TextView) findViewById(R.id.detail_tv_fzrq);
         tvSummary = (TextView) findViewById(R.id.detail_tv_summary);
         tvFiles = (ListView) findViewById(R.id.detail_tv_files);
+        tvOldVers = (ListView) findViewById(R.id.detail_tv_old_vers);
+        tvNewVers = (ListView) findViewById(R.id.detail_tv_new_vers);
 
+        //电子标准点击打开
         tvFiles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                final String fileId = stdFileEntities.get(position).getId();
-                final String fileName = stdFileEntities.get(position).getName();
+                StdFileListAdapter adapter = (StdFileListAdapter) tvFiles.getAdapter();
+                final String fileId = adapter.getItem(position).getId();
+                final String fileName = adapter.getItem(position).getName();
 
                 //用应用内的pdfViewer打开
                 /*Intent intent = new Intent();
@@ -156,12 +166,7 @@ public class StdDetailActivity extends AppCompatActivity {
 
                             InputStream input = conn.getInputStream();
                             FileUtils fileUtils = new FileUtils();
-                            File resultFile=fileUtils.write2SDFromInput("/jyjy/", fileName, input);
-
-                            //Toast.makeText(StdFilePdfActivity.this,"下载成功:"+resultFile.getName(),Toast.LENGTH_SHORT).show();
-                            //Toast.makeText(StdFilePdfActivity.this,"下载成功",Toast.LENGTH_SHORT).show();
-                            System.out.println("下载成功！！！！！");
-                            System.out.println(resultFile.getAbsolutePath());
+                            File resultFile = fileUtils.write2SDFromInput("/jyjy/", fileName, input);
 
                             Intent intent = new Intent(Intent.ACTION_VIEW);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -182,55 +187,70 @@ public class StdDetailActivity extends AppCompatActivity {
             }
         });
 
+        tvOldVers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                StdListAdapter adapter = (StdListAdapter) parent.getAdapter();
 
-        Intent intent = getIntent();
-        final String stdId = intent.getStringExtra("stdId");
+                Intent intent = new Intent();
+                intent.putExtra("stdId", adapter.getItem(position).getId());
+                intent.setClassName(StdDetailActivity.this, "com.manbuit.android.fragment.StdDetailActivity");
+                startActivity(intent);
+            }
+        });
 
-        stdFileEntities = new ArrayList<>();
+        tvNewVers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                StdListAdapter adapter = (StdListAdapter) parent.getAdapter();
 
+                Intent intent = new Intent();
+                intent.putExtra("stdId", adapter.getItem(position).getId());
+                intent.setClassName(StdDetailActivity.this, "com.manbuit.android.fragment.StdDetailActivity");
+                startActivity(intent);
+            }
+        });
+
+        //加载数据
         new Thread(new Runnable() {
             @Override
-            public void run() {
+            public void run () {
                 final DataRequest dataRequest = new DataRequest();
 
+                //加载标准信息
                 DataRequestUnit root = new DataRequestUnit();
                 root.setDs("12814070-5537-b95c-e4f9-abfc0d460765");
-                root.setFilter(
-                        new Filter("and", null, null, null,
-                                Arrays.asList(
-                                        new Filter("id", "string", "=", "'" + stdId + "'", null)
-                                )
-                        )
-                );
+                root.setFilter(new Filter("id", "string", "=", "'" + stdId + "'", null));
                 dataRequest.getRoot().add(root);
 
+                //加载电子标准
                 DataRequestUnit files = new DataRequestUnit();
                 files.setDs("b8b1dc9d-ec45-a057-f062-4238063267b4");
                 files.setFilter(new Filter("jyjy_std", "string", "=", "'" + stdId + "'", null));
                 files.getOrderbies().add(new OrderBy("cTimeStamp", true));
                 dataRequest.getNodes().put("files", files);
 
+                //加载旧版标准
                 DataRequestUnit oldVers = new DataRequestUnit();
-                oldVers.setDs("089f3ce1-b10d-b255-0f3b-de6a91bc43f8");
-                oldVers.getParams().put("oldVerId", stdId);
+                oldVers.setDs("a6fa4f2e-c7b4-1d20-7ab1-2611230f34eb");
+                oldVers.getParams().put("newVerId", stdId);
                 oldVers.setOrderbies(Arrays.asList(
-                        new OrderBy("orderNo",false)
+                        new OrderBy("orderNo", false)
                 ));
                 dataRequest.getNodes().put("oldVers", oldVers);
 
+                //加载新版标准
                 DataRequestUnit newVers = new DataRequestUnit();
-                newVers.setDs("a6fa4f2e-c7b4-1d20-7ab1-2611230f34eb");
-                newVers.getParams().put("newVerId", stdId);
+                newVers.setDs("089f3ce1-b10d-b255-0f3b-de6a91bc43f8");
+                newVers.getParams().put("oldVerId", stdId);
                 newVers.setOrderbies(Arrays.asList(
-                        new OrderBy("orderNo",false)
+                        new OrderBy("orderNo", false)
                 ));
                 dataRequest.getNodes().put("newVers", newVers);
 
-                Request request = dataRequest.genRequest(global.getMyContext().get("token").toString(),loadDataHandler);
+                Request request = dataRequest.genRequest(global.getMyContext().get("token").toString(), loadDataHandler);
                 queue.add(request);
             }
         }).start();
-
-        //findViewById(R.layout.activity_std_detail).scrollTo(0,10);
     }
 }
