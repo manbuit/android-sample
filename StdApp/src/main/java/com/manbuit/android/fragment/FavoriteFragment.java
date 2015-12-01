@@ -152,7 +152,7 @@ public class FavoriteFragment extends ListFragment implements SwipeRefreshLayout
 
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         //toolbar.setTitle("部门台账");
-        toolbar.setTitle("标准查询");
+        toolbar.setTitle("我的收藏");
 
         accountLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.favoriteLayout);
         accountLayout.setOnRefreshListener(this);

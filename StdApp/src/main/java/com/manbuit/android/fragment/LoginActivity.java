@@ -218,7 +218,9 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             catch (Exception e){
                                 e.printStackTrace();
-                                Toast.makeText(LoginActivity.this,e.toString(),Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(LoginActivity.this,e.toString(),Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "用户名或密码不正确",Toast.LENGTH_SHORT).show();
+                                showProgress(false);
                             }
                         }
                     },

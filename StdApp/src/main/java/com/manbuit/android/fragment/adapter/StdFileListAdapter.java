@@ -12,6 +12,9 @@ import com.manbuit.android.fragment.R;
 import com.manbuit.android.fragment.model.StdEntity;
 import com.manbuit.android.fragment.model.StdFileEntity;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +27,24 @@ public class StdFileListAdapter extends BaseAdapter {
     private LayoutInflater mInflater = null;
     public StdFileListAdapter(Context context, List<StdFileEntity> stdFileEntities){
         super();
+        mInflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        this.stdFileEntities = stdFileEntities;
+    }
+
+    public StdFileListAdapter(Context context, JSONArray jsonArray) throws Exception{
+        super();
+
+        List<StdFileEntity> stdFileEntities = new ArrayList<StdFileEntity>();
+        for(int i=0;i< jsonArray.length();i++){
+            JSONObject item = jsonArray.getJSONObject(i);
+            String id = item.getString("id");
+            String name = item.getString("name");
+            StdFileEntity stdFileEntity = new StdFileEntity(id,name);
+            stdFileEntities.add(stdFileEntity);
+        }
+
         mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

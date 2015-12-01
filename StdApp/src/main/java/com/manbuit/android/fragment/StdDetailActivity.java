@@ -26,6 +26,7 @@ import com.manbuit.android.fragment.adapter.StdListAdapter;
 import com.manbuit.android.fragment.dataRequest.DataRequest;
 import com.manbuit.android.fragment.dataRequest.DataRequestUnit;
 import com.manbuit.android.fragment.dataRequest.Filter;
+import com.manbuit.android.fragment.dataRequest.OrderBy;
 import com.manbuit.android.fragment.model.StdEntity;
 import com.manbuit.android.fragment.model.StdFileEntity;
 import com.manbuit.android.fragment.utils.FileUtils;
@@ -101,27 +102,13 @@ public class StdDetailActivity extends AppCompatActivity {
                 tvSummary.setText(root.getString("summary"));
 
                 JSONArray files = result.getJSONObject("files").getJSONArray("data");
-                //List<String> _files = new ArrayList<>();
-                for(int i=0;i< files.length();i++){
-                    //_files.add(files.getJSONObject(i).getString("name"));
-                    JSONObject item = files.getJSONObject(i);
-                    String id = item.getString("id");
-                    String name = item.getString("name");
-                    StdFileEntity stdFileEntity = new StdFileEntity(id,name);
-                    stdFileEntities.add(stdFileEntity);
-                }
-
-                StdFileListAdapter adapter = new StdFileListAdapter(StdDetailActivity.this,stdFileEntities);
-                    /*ArrayAdapter adapter = new ArrayAdapter<String>(
-                            StdDetailActivity.this,
-                            //android.R.layout.simple_expandable_list_item_1,
-                            android.R.layout.simple_list_item_1,
-                            _files
-                    );*/
+                StdFileListAdapter adapter = new StdFileListAdapter(StdDetailActivity.this,files);
                 tvFiles.setAdapter(adapter);
-                /*tvFiles.setFocusable(false);
-                tvFiles.scrollTo(0,20);*/
+
+
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -157,15 +144,6 @@ public class StdDetailActivity extends AppCompatActivity {
                 intent.putExtra("fileId", stdFileEntities.get(position).getId());
                 intent.putExtra("fileName", stdFileEntities.get(position).getName());
                 intent.setClassName(StdDetailActivity.this, "com.manbuit.android.fragment.StdFilePdfActivity");
-                startActivity(intent);*/
-
-                //用第三方应用查看pdf
-                /*Uri fileUri = Uri.parse(String.format(global.getFileDownloadUrl()+"/%s;jsessionid=%s.pdf",fileId,global.getMyContext().get("token")));
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setAction(Intent.ACTION_VIEW);
-                //intent.setDataAndType(Uri.fromFile(resultFile), "application/pdf");
-                intent.setDataAndType(fileUri, "application/pdf");
                 startActivity(intent);*/
 
                 new Thread(new Runnable() {
@@ -220,7 +198,7 @@ public class StdDetailActivity extends AppCompatActivity {
                 root.setFilter(
                         new Filter("and", null, null, null,
                                 Arrays.asList(
-                                        new Filter("id","string","=","'" + stdId + "'",null)
+                                        new Filter("id", "string", "=", "'" + stdId + "'", null)
                                 )
                         )
                 );
@@ -228,14 +206,25 @@ public class StdDetailActivity extends AppCompatActivity {
 
                 DataRequestUnit files = new DataRequestUnit();
                 files.setDs("b8b1dc9d-ec45-a057-f062-4238063267b4");
-                files.setFilter(
-                        new Filter("and", null, null, null,
-                                Arrays.asList(
-                                        new Filter("jyjy_std", "string", "=", "'" + stdId + "'", null)
-                                )
-                        )
-                );
-                dataRequest.getNodes().put("files",files);
+                files.setFilter(new Filter("jyjy_std", "string", "=", "'" + stdId + "'", null));
+                files.getOrderbies().add(new OrderBy("cTimeStamp", true));
+                dataRequest.getNodes().put("files", files);
+
+                DataRequestUnit oldVers = new DataRequestUnit();
+                oldVers.setDs("089f3ce1-b10d-b255-0f3b-de6a91bc43f8");
+                oldVers.getParams().put("oldVerId", stdId);
+                oldVers.setOrderbies(Arrays.asList(
+                        new OrderBy("orderNo",false)
+                ));
+                dataRequest.getNodes().put("oldVers", oldVers);
+
+                DataRequestUnit newVers = new DataRequestUnit();
+                newVers.setDs("a6fa4f2e-c7b4-1d20-7ab1-2611230f34eb");
+                newVers.getParams().put("newVerId", stdId);
+                newVers.setOrderbies(Arrays.asList(
+                        new OrderBy("orderNo",false)
+                ));
+                dataRequest.getNodes().put("newVers", newVers);
 
                 Request request = dataRequest.genRequest(global.getMyContext().get("token").toString(),loadDataHandler);
                 queue.add(request);

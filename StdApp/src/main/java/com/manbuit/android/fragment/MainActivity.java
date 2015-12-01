@@ -243,14 +243,17 @@ public class MainActivity
             case R.id.tvStdDB:
                 //Toast.makeText(MainActivity.this, "tvStdDB", Toast.LENGTH_SHORT).show();
                 setTabSelection(0);
+                toolbar.setTitle("标准总库");
                 break;
             case R.id.tvAccount:
                 //Toast.makeText(MainActivity.this, "tvAccount", Toast.LENGTH_SHORT).show();
                 setTabSelection(1);
+                toolbar.setTitle("部门台账");
                 break;
             case R.id.tvFavorite:
                 //Toast.makeText(MainActivity.this, "tvFavorite", Toast.LENGTH_SHORT).show();
                 setTabSelection(2);
+                toolbar.setTitle("我的收藏");
                 break;
             default:
                 Toast.makeText(MainActivity.this, "nothing", Toast.LENGTH_SHORT).show();

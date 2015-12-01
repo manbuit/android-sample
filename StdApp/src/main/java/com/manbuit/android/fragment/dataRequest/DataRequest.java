@@ -26,8 +26,8 @@ import java.util.Map;
  */
 public class DataRequest {
 
-    //private final static String BASEURL = "222.190.98.24:8099";
-    private final static String BASEURL = "192.168.1.70:8080";
+    private final static String BASEURL = "222.190.98.24:8099";
+    //private final static String BASEURL = "192.168.1.70:8080";
 
     private final static String LOGIN_URL = "http://%s/logincheck?json";
     private final static String DATA_LOAD_URL = "http://%s/api/data/load";

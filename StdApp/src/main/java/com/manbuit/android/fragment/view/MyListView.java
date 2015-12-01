@@ -1,4 +1,4 @@
-package com.manbuit.android.fragment;
+package com.manbuit.android.fragment.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

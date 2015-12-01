@@ -147,8 +147,7 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
         global = (StdApp) getActivity().getApplication();
 
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        //toolbar.setTitle("部门台账");
-        toolbar.setTitle("标准查询");
+        toolbar.setTitle("部门台账");
 
         accountLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.accountLayout);
         accountLayout.setOnRefreshListener(this);

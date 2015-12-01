@@ -148,8 +148,7 @@ public class StdDBFragment extends ListFragment implements SwipeRefreshLayout.On
         global = (StdApp) getActivity().getApplication();
 
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        //toolbar.setTitle("部门台账");
-        toolbar.setTitle("标准查询");
+        toolbar.setTitle("标准总库");
 
         accountLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.stddbLayout);
         accountLayout.setOnRefreshListener(this);
