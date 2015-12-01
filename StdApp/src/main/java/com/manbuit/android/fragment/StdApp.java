@@ -26,8 +26,8 @@ public class StdApp extends Application {
         setMyContext(new LinkedHashMap()); //初始化上下文变量
     }
 
-    //private final static String BASEURL = "192.168.1.70:8080";
-    private final static String BASEURL = "222.190.98.24:8099";
+    private final static String BASEURL = "192.168.1.70:8080";
+    //private final static String BASEURL = "222.190.98.24:8099";
 
     private final static String LOGINURL = "http://%s/logincheck?json";
     private final static String DATAURL = "http://%s/api/data/load";
