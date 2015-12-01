@@ -91,7 +91,7 @@ public class StdListAdapter extends BaseAdapter {
             if (stdEntity.getStatus().equals("作废")) {
                 codeView.setTextColor(Color.rgb(255, 0, 0));
             } else {
-                codeView.setTextColor(Color.rgb(0, 255, 0));
+                codeView.setTextColor(Color.rgb(0, 127, 0));
             }
         }
 

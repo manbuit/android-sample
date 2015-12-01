@@ -76,9 +76,10 @@ public class StdDetailActivity extends AppCompatActivity {
                     tvCode.setTextColor(Color.rgb(255, 0, 0));
                 }
                 else {
-                    tvCode.setTextColor(Color.rgb(0, 255, 0));
+                    tvCode.setTextColor(Color.rgb(0, 127, 0));
                 }
-                tvName.setText(String.format("标准名称：《%s》", root.getString("name")));
+                //tvName.setText(String.format("标准名称：《%s》", root.getString("name")));
+                tvName.setText(String.format("标准名称：%s", root.getString("name")));
                 tvCategory.setText(String.format("标准类别：%s", root.getString("category_name")));
                 SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");// HH:mm:ss
                 tvFbrq.setText(

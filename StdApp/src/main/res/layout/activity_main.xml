@@ -51,12 +51,13 @@
             android:textColor="#333"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="4dp"
             android:layout_margin="0dp"
             android:layout_weight="1"
             android:gravity="center"
             android:drawableTop="@drawable/std_db"
+            android:drawablePadding="4dp"
             android:textAlignment="center"
             />
         <TextView
@@ -68,12 +69,13 @@
             android:textColor="#333"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="4dp"
             android:layout_margin="0dp"
             android:layout_weight="1"
             android:gravity="center"
             android:drawableTop="@drawable/account"
+            android:drawablePadding="4dp"
             android:textAlignment="center"
             />
         <TextView
@@ -85,12 +87,13 @@
             android:textColor="#333"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="4dp"
             android:layout_margin="0dp"
             android:layout_weight="1"
             android:gravity="center"
             android:drawableTop="@drawable/favorite"
+            android:drawablePadding="4dp"
             android:textAlignment="center"
             />
     </LinearLayout>
