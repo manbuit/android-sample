@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         //mToolbar.setTitle(R.string.app_name);
         mToolbar.setTitle("  "+getResources().getString(R.string.app_name));
-        mToolbar.setLogo(R.mipmap.ic_jyjy);
+        mToolbar.setLogo(R.drawable.ic_jyjy);
         setSupportActionBar(mToolbar);
 
         mUsernameView = (EditText) findViewById(R.id.username);

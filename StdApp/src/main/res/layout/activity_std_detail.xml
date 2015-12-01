@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:padding="4dp"
-            android:text=""
+            android:text="标准号："
             android:textStyle = "bold"
             android:background="#FFF"
             android:id="@+id/detail_tv_code" />
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:padding="4dp"
-            android:text=""
+            android:text="标准名称："
             android:background="#FFF"
             android:id="@+id/detail_tv_name" />
 
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:padding="4dp"
-            android:text=""
+            android:text="标准类别："
             android:background="#FFF"
             android:id="@+id/detail_tv_category" />
 
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:padding="4dp"
-            android:text=""
+            android:text="发布日期："
             android:background="#FFF"
             android:id="@+id/detail_tv_fbrq" />
 
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:padding="4dp"
-            android:text=""
+            android:text="实施日期："
             android:background="#FFF"
             android:id="@+id/detail_tv_ssrq" />
 
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:padding="4dp"
-            android:text=""
+            android:text="废止日期："
             android:background="#FFF"
             android:id="@+id/detail_tv_fzrq" />
 
