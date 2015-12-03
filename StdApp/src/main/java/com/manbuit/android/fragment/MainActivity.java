@@ -10,6 +10,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -34,6 +35,7 @@ import com.android.volley.toolbox.Volley;
 import com.manbuit.android.fragment.dataRequest.DataRequest;
 import com.manbuit.android.fragment.dataRequest.DataRequestUnit;
 import com.manbuit.android.fragment.dataRequest.OrderBy;
+import com.manbuit.android.fragment.utils.DownloadFileAsync;
 import com.manbuit.android.fragment.utils.FileUtils;
 
 import org.json.JSONException;
@@ -183,9 +185,24 @@ public class MainActivity
                         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //Toast.makeText(getActivity(), "确定", Toast.LENGTH_SHORT).show();
+                                AsyncTask task = new DownloadFileAsync(
+                                        MainActivity.this,
+                                        new Handler(){
+                                            @Override
+                                            public void handleMessage(Message msg) {
+                                                Uri uri = (Uri) msg.obj;
 
-                                new Thread(new Runnable() {
+                                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                                intent.setDataAndType(uri,
+                                                        "application/vnd.android.package-archive");
+                                                startActivity(intent);
+                                            }
+                                        }
+                                );
+                                String urlString = String.format(global.getFileDownloadUrl()+"/%s;jsessionid=%s",apkFileId,global.getMyContext().get("token"));
+                                task.execute(urlString,String.format("stdApp_%s.apk",rev));
+
+                                /*new Thread(new Runnable() {
                                     @Override
                                     public void run() {
                                         String urlString = String.format(global.getFileDownloadUrl()+"/%s;jsessionid=%s",apkFileId,global.getMyContext().get("token"));
@@ -216,7 +233,7 @@ public class MainActivity
                                             e.printStackTrace();
                                         }
                                     }
-                                }).start();
+                                }).start();*/
                             }
                         });
                         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {

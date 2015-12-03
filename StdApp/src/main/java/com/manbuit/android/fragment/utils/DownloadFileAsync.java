@@ -23,7 +23,7 @@ public class DownloadFileAsync extends AsyncTask<Object, Integer, Uri> {
     ProgressDialog mProgressDialog;
     Handler handler;
 
-    public DownloadFileAsync(Activity activity, Handler handler){
+    public DownloadFileAsync(Activity activity, Handler handler) {
 
         this.handler = handler;
 
@@ -98,9 +98,11 @@ public class DownloadFileAsync extends AsyncTask<Object, Integer, Uri> {
             e1.printStackTrace();
         }
 
-        Message msg = new Message();
-        msg.obj = Uri.fromFile(resultFile);
-        handler.sendMessage(msg);
+        if(handler!=null) {
+            Message msg = new Message();
+            msg.obj = Uri.fromFile(resultFile);
+            handler.sendMessage(msg);
+        }
 
         return Uri.fromFile(resultFile);
     }
