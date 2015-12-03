@@ -6,10 +6,12 @@ package com.manbuit.android.fragment.model;
 public class StdFileEntity {
     private String id;
     private String name;
+    private Integer size;
 
-    public StdFileEntity(String id, String name){
+    public StdFileEntity(String id, String name, int size){
         this.setId(id);
         this.setName(name);
+        this.setSize(size);
     }
 
     public String getId() {
@@ -26,5 +28,13 @@ public class StdFileEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
     }
 }

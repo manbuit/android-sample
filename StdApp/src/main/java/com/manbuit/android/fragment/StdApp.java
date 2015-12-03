@@ -1,6 +1,8 @@
 package com.manbuit.android.fragment;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -26,22 +28,37 @@ public class StdApp extends Application {
         setMyContext(new LinkedHashMap()); //初始化上下文变量
     }
 
-    //private final static String BASEURL = "192.168.1.70:8080";
-    private final static String BASEURL = "222.190.98.24:8099";
+    @Override
+    public Context getApplicationContext() {
+        return super.getApplicationContext();
+    }
 
-    private final static String LOGINURL = "http://%s/logincheck?json";
-    private final static String DATAURL = "http://%s/api/data/load";
-    private final static String FILEURL = "http://%s/api/file/download";
+    private final static String URL_TEMPLATE = "http://%s:%s/%s";
 
     public String getLoginCheckUrl() {
-        return String.format(LOGINURL,BASEURL);
+        return String.format(
+                URL_TEMPLATE,
+                getString(R.string.r_server_host),
+                getString(R.string.r_server_port),
+                getString(R.string.r_login_path)
+        );
     }
 
     public String getDataLoadUrl() {
-        return String.format(DATAURL,BASEURL);
+        return String.format(
+                URL_TEMPLATE,
+                getString(R.string.r_server_host),
+                getString(R.string.r_server_port),
+                getString(R.string.r_data_load)
+        );
     }
 
     public String getFileDownloadUrl() {
-        return String.format(FILEURL,BASEURL);
+        return String.format(
+                URL_TEMPLATE,
+                getString(R.string.r_server_host),
+                getString(R.string.r_server_port),
+                getString(R.string.r_file_download)
+        );
     }
 }

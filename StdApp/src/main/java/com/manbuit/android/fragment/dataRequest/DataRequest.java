@@ -1,5 +1,6 @@
 package com.manbuit.android.fragment.dataRequest;
 
+import android.app.Application;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
@@ -26,13 +27,13 @@ import java.util.Map;
  */
 public class DataRequest {
 
-    private final static String BASEURL = "222.190.98.24:8099";
+    /*private final static String BASEURL = "222.190.98.24:8099";
     //private final static String BASEURL = "192.168.1.70:8080";
 
     private final static String LOGIN_URL = "http://%s/logincheck?json";
     private final static String DATA_LOAD_URL = "http://%s/api/data/load";
     private final static String DATA_UPDATE_URL = "http://%s/api/data/load";
-    private final static String FILE_DOWNLOAD_URL = "http://%s/api/file/download";
+    private final static String FILE_DOWNLOAD_URL = "http://%s/api/file/download";*/
 
     Map<String,Object> params = new HashMap<String,Object>();
     List<DataRequestUnit> root = new ArrayList<DataRequestUnit>();
@@ -92,10 +93,10 @@ public class DataRequest {
         return jsonObject;
     }
 
-    public Request genRequest(String jsessionid, final Handler handler){
+    public Request genRequest(StdApp app, final Handler handler){
         final DataRequest me = this;
 
-        String url = String.format(DATA_LOAD_URL+";jsessionid=%s", BASEURL, jsessionid);
+        String url = String.format("%s;jsessionid=%s", app.getDataLoadUrl(), app.getMyContext().get("token").toString());
 
         Request request = new StringRequest(
                 Request.Method.POST,

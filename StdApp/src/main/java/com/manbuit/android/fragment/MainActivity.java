@@ -147,7 +147,7 @@ public class MainActivity
 
         dataRequest.getRoot().add(data);
 
-        Request request = dataRequest.genRequest(global.getMyContext().get("token").toString(),new Handler(){
+        Request request = dataRequest.genRequest(global,new Handler(){
             public void handleMessage(Message msg) {
                 JSONObject result = (JSONObject) msg.obj;
 
@@ -270,7 +270,8 @@ public class MainActivity
         hideFragments(transaction);
         switch (index) {
             case 0:
-                tvStdDB.setBackgroundColor(Color.WHITE);
+                //tvStdDB.setBackgroundColor(Color.WHITE);
+                tvStdDB.setBackgroundColor(Color.parseColor("#CCFFFF"));
                 if (stdDBFragment == null) {
                     stdDBFragment = new StdDBFragment();
                     transaction.add(R.id.content, stdDBFragment);
@@ -279,7 +280,8 @@ public class MainActivity
                 }
                 break;
             case 1:
-                tvAccount.setBackgroundColor(Color.WHITE);
+                //tvAccount.setBackgroundColor(Color.WHITE);
+                tvAccount.setBackgroundColor(Color.parseColor("#CCFFFF"));
                 if (accountFragment == null) {
                     accountFragment = new AccountFragment();
                     transaction.add(R.id.content, accountFragment);
@@ -288,7 +290,8 @@ public class MainActivity
                 }
                 break;
             case 2:
-                tvFavorite.setBackgroundColor(Color.WHITE);
+                //tvFavorite.setBackgroundColor(Color.WHITE);
+                tvFavorite.setBackgroundColor(Color.parseColor("#CCFFFF"));
                 if (favoriteFragment == null) {
                     favoriteFragment = new FavoriteFragment();
                     transaction.add(R.id.content, favoriteFragment);
@@ -307,9 +310,9 @@ public class MainActivity
      * 清除掉所有的选中状态。
      */
     private void clearSelection() {
-        tvAccount.setBackgroundColor(Color.parseColor("#AACCEE"));
-        tvFavorite.setBackgroundColor(Color.parseColor("#AACCEE"));
-        tvStdDB.setBackgroundColor(Color.parseColor("#AACCEE"));
+        tvAccount.setBackgroundColor(Color.parseColor("#3399CC"));
+        tvFavorite.setBackgroundColor(Color.parseColor("#3399CC"));
+        tvStdDB.setBackgroundColor(Color.parseColor("#3399CC"));
     }
 
     /**

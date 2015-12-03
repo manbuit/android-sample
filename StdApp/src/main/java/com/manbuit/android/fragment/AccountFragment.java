@@ -76,6 +76,10 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
 
                 adapter.notifyDataSetChanged();
                 accountLayout.setRefreshing(false);
+
+                if(adapter.getCount()<=PAGE_SIZE) {
+                    Toast.makeText(getActivity(), String.format("共计 %d 条记录",data.getInt("totalCount")), Toast.LENGTH_SHORT).show();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -128,7 +132,7 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
         dataRequest.getNodes().put("data", data);
 
         Request request = dataRequest.genRequest(
-                global.getMyContext().get("token").toString(),
+                global,
                 loadDataHandler
         );
         queue.add(request);

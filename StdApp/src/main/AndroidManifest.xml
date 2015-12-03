@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.manbuit.android.fragment"
-    android:versionName="1.0.151201.2320"
+    android:versionName="1.0.151203.0901"
     android:versionCode="1"
-    >
+    ><!-- 当前使用本地，不可发布 -->
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <!--<uses-permission android:name="android.permission.GET_ACCOUNTS" />-->

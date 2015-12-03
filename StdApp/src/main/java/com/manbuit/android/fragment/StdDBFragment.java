@@ -18,6 +18,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -40,7 +41,7 @@ import java.util.List;
 
 public class StdDBFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener {
     //public class AccountFragment extends SwipeRefreshListFragment {
-    final static int PAGE_SIZE = 30;
+    final static int PAGE_SIZE = 50;
 
     private StdApp global;
 
@@ -78,6 +79,10 @@ public class StdDBFragment extends ListFragment implements SwipeRefreshLayout.On
 
                 adapter.notifyDataSetChanged();
                 accountLayout.setRefreshing(false);
+
+                if(adapter.getCount()<=PAGE_SIZE) {
+                    Toast.makeText(getActivity(), String.format("共计 %d 条记录",data.getInt("totalCount")), Toast.LENGTH_SHORT).show();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -129,7 +134,7 @@ public class StdDBFragment extends ListFragment implements SwipeRefreshLayout.On
         dataRequest.getNodes().put("data", data);
 
         Request request = dataRequest.genRequest(
-                global.getMyContext().get("token").toString(),
+                global,
                 loadDataHandler
         );
         queue.add(request);

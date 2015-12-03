@@ -41,7 +41,8 @@ public class StdFileListAdapter extends BaseAdapter {
             JSONObject item = jsonArray.getJSONObject(i);
             String id = item.getString("id");
             String name = item.getString("name");
-            StdFileEntity stdFileEntity = new StdFileEntity(id,name);
+            int size = item.getInt("size");
+            StdFileEntity stdFileEntity = new StdFileEntity(id,name,size);
             stdFileEntities.add(stdFileEntity);
         }
 

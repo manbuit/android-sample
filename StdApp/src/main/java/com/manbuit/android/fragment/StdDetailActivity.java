@@ -1,11 +1,14 @@
 package com.manbuit.android.fragment;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -29,6 +32,7 @@ import com.manbuit.android.fragment.dataRequest.Filter;
 import com.manbuit.android.fragment.dataRequest.OrderBy;
 import com.manbuit.android.fragment.model.StdEntity;
 import com.manbuit.android.fragment.model.StdFileEntity;
+import com.manbuit.android.fragment.utils.DownloadFileAsync;
 import com.manbuit.android.fragment.utils.FileUtils;
 
 import org.json.JSONArray;
@@ -36,8 +40,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -48,6 +54,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class StdDetailActivity extends AppCompatActivity {
 
@@ -141,53 +148,6 @@ public class StdDetailActivity extends AppCompatActivity {
         tvOldVers = (ListView) findViewById(R.id.detail_tv_old_vers);
         tvNewVers = (ListView) findViewById(R.id.detail_tv_new_vers);
 
-        //电子标准点击打开
-        tvFiles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                StdFileListAdapter adapter = (StdFileListAdapter) tvFiles.getAdapter();
-                final String fileId = adapter.getItem(position).getId();
-                final String fileName = adapter.getItem(position).getName();
-
-                //用应用内的pdfViewer打开
-                /*Intent intent = new Intent();
-                intent.putExtra("fileId", stdFileEntities.get(position).getId());
-                intent.putExtra("fileName", stdFileEntities.get(position).getName());
-                intent.setClassName(StdDetailActivity.this, "com.manbuit.android.fragment.StdFilePdfActivity");
-                startActivity(intent);*/
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String urlString = String.format(global.getFileDownloadUrl()+"/%s;jsessionid=%s",fileId,global.getMyContext().get("token"));
-                        try {
-                            URL url = new URL(urlString);
-                            HttpURLConnection conn=(HttpURLConnection)url.openConnection();
-
-                            InputStream input = conn.getInputStream();
-                            FileUtils fileUtils = new FileUtils();
-                            File resultFile = fileUtils.write2SDFromInput("/jyjy/", fileName, input);
-
-                            Intent intent = new Intent(Intent.ACTION_VIEW);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.setAction(Intent.ACTION_VIEW);
-                            intent.setDataAndType(Uri.fromFile(resultFile), "application/pdf");
-                            // TODO 电子标准不一定是PDF
-                            startActivity(intent);
-
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-            }
-        });
-
         tvOldVers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -249,9 +209,97 @@ public class StdDetailActivity extends AppCompatActivity {
                 ));
                 dataRequest.getNodes().put("newVers", newVers);
 
-                Request request = dataRequest.genRequest(global.getMyContext().get("token").toString(), loadDataHandler);
+                Request request = dataRequest.genRequest(global, loadDataHandler);
                 queue.add(request);
             }
         }).start();
+
+        //电子标准点击打开
+        tvFiles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                StdFileListAdapter adapter = (StdFileListAdapter) tvFiles.getAdapter();
+                final String fileId = adapter.getItem(position).getId();
+                final String fileName = adapter.getItem(position).getName();
+                final int filSize = adapter.getItem(position).getSize();
+
+                //用应用内的pdfViewer打开
+                /*Intent intent = new Intent();
+                intent.putExtra("fileId", stdFileEntities.get(position).getId());
+                intent.putExtra("fileName", stdFileEntities.get(position).getName());
+                intent.setClassName(StdDetailActivity.this, "com.manbuit.android.fragment.StdFilePdfActivity");
+                startActivity(intent);*/
+
+                //使用第三方应用打开
+                /*new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String urlString = String.format(global.getFileDownloadUrl()+"/%s;jsessionid=%s",fileId,global.getMyContext().get("token"));
+                        try {
+                            URL url = new URL(urlString);
+                            HttpURLConnection conn=(HttpURLConnection)url.openConnection();
+
+                            InputStream input = conn.getInputStream();
+                            FileUtils fileUtils = new FileUtils();
+                            File resultFile = fileUtils.write2SDFromInput("/jyjy/", fileName, input);
+
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.setAction(Intent.ACTION_VIEW);
+                            intent.setDataAndType(Uri.fromFile(resultFile), "application/pdf");
+                            // TODO 电子标准不一定是PDF
+                            startActivity(intent);
+
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();*/
+
+                //new DownloadFileAsync(StdDetailActivity.this).execute(fileId,fileName,String.valueOf(filSize));
+
+                String urlString = String.format(global.getFileDownloadUrl()+"/%s;jsessionid=%s",fileId,global.getMyContext().get("token"));
+                AsyncTask task = new DownloadFileAsync(
+                        StdDetailActivity.this,
+                        new Handler() {
+                            public void handleMessage(Message msg) {
+                                Uri uri = (Uri) msg.obj;
+
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.setAction(Intent.ACTION_VIEW);
+                                intent.setDataAndType(uri, "application/pdf");
+                                // TODO 电子标准不一定是PDF
+                                startActivity(intent);
+                            }
+                        }
+                );
+                task.execute(urlString,fileName);
+
+                /*try {
+                    //new DownloadFileAsync(StdDetailActivity.this).execute(urlString,fileName);
+                    Uri uri = new DownloadFileAsync(StdDetailActivity.this).execute(urlString,fileName).get();
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setDataAndType(uri, "application/pdf");
+                    // TODO 电子标准不一定是PDF
+                    startActivity(intent);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }*/
+            }
+        });
     }
+
+
 }
