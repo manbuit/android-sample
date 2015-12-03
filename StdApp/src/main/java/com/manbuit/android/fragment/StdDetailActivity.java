@@ -1,8 +1,12 @@
 package com.manbuit.android.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -11,6 +15,7 @@ import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -269,13 +274,7 @@ public class StdDetailActivity extends AppCompatActivity {
                         new Handler() {
                             public void handleMessage(Message msg) {
                                 Uri uri = (Uri) msg.obj;
-
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.setAction(Intent.ACTION_VIEW);
-                                intent.setDataAndType(uri, "application/pdf");
-                                // TODO 电子标准不一定是PDF
-                                startActivity(intent);
+                                FileUtils.openFile(StdDetailActivity.this, uri);
                             }
                         }
                 );

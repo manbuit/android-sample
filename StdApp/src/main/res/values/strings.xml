@@ -13,11 +13,17 @@
     <string name="key_username">KEY_SP_USERNAME</string>
     <string name="key_password">KEY_SP_PASSWORD</string>
 
-    <!-- 服务端参数 -->
-    <!--<string name="r_server_host">222.190.98.24</string>
-    <string name="r_server_port">8099</string>-->
-    <string name="r_server_host">192.168.1.70</string>
-    <string name="r_server_port">8080</string>
+    <!-- 服务端参数：主机和端口的缺省设置在StdApp的DEFAULT_INDEX -->
+    <!-- 正式环境 -->
+    <string name="r_server_host_p">222.190.98.24</string>
+    <string name="r_server_port_p">8099</string>
+    <!-- 测试环境 -->
+    <string name="r_server_host_t">222.190.98.24</string>
+    <string name="r_server_port_t">8099</string>
+    <!-- 开发环境 -->
+    <string name="r_server_host_d">192.168.1.70</string>
+    <string name="r_server_port_d">8080</string>
+
     <string name="r_login_path">logincheck?json</string>
     <string name="r_data_load">api/data/load</string>
     <string name="r_file_download">api/file/download</string>

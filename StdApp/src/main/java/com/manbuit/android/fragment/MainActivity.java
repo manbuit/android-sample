@@ -54,6 +54,9 @@ public class MainActivity
         extends AppCompatActivity
         implements View.OnClickListener/*, AppCompatCallback*/ {
 
+    final static String BG_COLOR = "#26C6DA";
+    final static String BG_COLOR_FOCUS = "#80DEEA";
+
     AccountFragment accountFragment;
     FavoriteFragment favoriteFragment;
     StdDBFragment stdDBFragment;
@@ -288,7 +291,7 @@ public class MainActivity
         switch (index) {
             case 0:
                 //tvStdDB.setBackgroundColor(Color.WHITE);
-                tvStdDB.setBackgroundColor(Color.parseColor("#CCFFFF"));
+                tvStdDB.setBackgroundColor(Color.parseColor(BG_COLOR_FOCUS));
                 if (stdDBFragment == null) {
                     stdDBFragment = new StdDBFragment();
                     transaction.add(R.id.content, stdDBFragment);
@@ -298,7 +301,7 @@ public class MainActivity
                 break;
             case 1:
                 //tvAccount.setBackgroundColor(Color.WHITE);
-                tvAccount.setBackgroundColor(Color.parseColor("#CCFFFF"));
+                tvAccount.setBackgroundColor(Color.parseColor(BG_COLOR_FOCUS));
                 if (accountFragment == null) {
                     accountFragment = new AccountFragment();
                     transaction.add(R.id.content, accountFragment);
@@ -308,7 +311,7 @@ public class MainActivity
                 break;
             case 2:
                 //tvFavorite.setBackgroundColor(Color.WHITE);
-                tvFavorite.setBackgroundColor(Color.parseColor("#CCFFFF"));
+                tvFavorite.setBackgroundColor(Color.parseColor(BG_COLOR_FOCUS));
                 if (favoriteFragment == null) {
                     favoriteFragment = new FavoriteFragment();
                     transaction.add(R.id.content, favoriteFragment);
@@ -327,9 +330,9 @@ public class MainActivity
      * 清除掉所有的选中状态。
      */
     private void clearSelection() {
-        tvAccount.setBackgroundColor(Color.parseColor("#3399CC"));
-        tvFavorite.setBackgroundColor(Color.parseColor("#3399CC"));
-        tvStdDB.setBackgroundColor(Color.parseColor("#3399CC"));
+        tvAccount.setBackgroundColor(Color.parseColor(BG_COLOR));
+        tvFavorite.setBackgroundColor(Color.parseColor(BG_COLOR));
+        tvStdDB.setBackgroundColor(Color.parseColor(BG_COLOR));
     }
 
     /**

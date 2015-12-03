@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -57,7 +58,6 @@ public class LoginActivity extends AppCompatActivity {
     private View mProgressView;
     private View mLoginFormView;
     private Toolbar mToolbar;
-    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +68,58 @@ public class LoginActivity extends AppCompatActivity {
 
         queue = Volley.newRequestQueue(LoginActivity.this);
 
-        sp = getSharedPreferences("mysp", Context.MODE_PRIVATE);
-
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         //mToolbar.setTitle(R.string.app_name);
-        mToolbar.setTitle("  "+getResources().getString(R.string.app_name));
+        mToolbar.setTitle("  " + getResources().getString(R.string.app_name));
         mToolbar.setLogo(R.drawable.ic_jyjy);
-        setSupportActionBar(mToolbar);
+
+        //环境切换功能未完成，该菜单暂不启用
+        //mToolbar.inflateMenu(R.menu.menu_login);
+
+        //setSupportActionBar(mToolbar);
+
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // Handle the menu item
+                //Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
+                switch (item.getItemId()){
+                    case R.id.action_config:
+                        final EditText editText = new EditText(LoginActivity.this);
+                        editText.setHint("示例：http://192.168.1.70:8080");
+                        editText.setEnabled(false);
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which){
+                                    case 3:
+                                        editText.setEnabled(true);
+                                        break;
+                                    default:
+                                        editText.setEnabled(false);
+                                        break;
+                                }
+                            }
+                        };
+                        AlertDialog.OnClickListener onOK = new AlertDialog.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(LoginActivity.this, String.valueOf(which), Toast.LENGTH_SHORT).show();
+                            }
+                        };
+                        new AlertDialog.Builder(LoginActivity.this)
+                                .setTitle("选择服务端")
+                                .setSingleChoiceItems(new String[]{"正式环境", "测试环境", "开发环境", "自定义"}, 0, onClickListener)
+                                .setView(editText)
+                                .setPositiveButton("确定", onOK)
+                                .setNegativeButton("取消", null)
+                                .show();
+                        break;
+                    default: break;
+                }
+                return true;
+            }
+        });
 
         mUsernameView = (EditText) findViewById(R.id.username);
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -117,6 +162,7 @@ public class LoginActivity extends AppCompatActivity {
         String key_username = getResources().getString(R.string.key_username);
         String key_password = getResources().getString(R.string.key_password);
 
+        SharedPreferences sp = global.getMySP();
         String username = sp.getString(key_username, null);
         String password = sp.getString(key_password, null);
 
@@ -132,10 +178,11 @@ public class LoginActivity extends AppCompatActivity {
         final String username = mUsernameView.getText().toString();
         final String password = mPasswordView.getText().toString();
 
+        SharedPreferences sp = global.getMySP();
+
         SharedPreferences.Editor e = sp.edit();
         e.putString(key_username,username);
         e.putString(key_password, password);
-
         e.commit();
     }
 
