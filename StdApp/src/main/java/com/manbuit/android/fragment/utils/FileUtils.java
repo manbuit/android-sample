@@ -25,6 +25,8 @@ import java.net.URLEncoder;
  */
 public class FileUtils {
 
+    public final static String DOWNLOAD_DIR = "/jyjy/";
+
     private String SDPATH;
 
     public String getSDPATH() {

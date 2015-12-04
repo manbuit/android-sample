@@ -20,6 +20,7 @@ import java.net.URL;
  * Created by MB on 2015/12/3.
  */
 public class DownloadFileAsync extends AsyncTask<Object, Integer, Uri> {
+
     ProgressDialog mProgressDialog;
     Handler handler;
 
@@ -61,8 +62,8 @@ public class DownloadFileAsync extends AsyncTask<Object, Integer, Uri> {
 
             OutputStream output = null;
             try{
-                fileUtils.creatSDDir("/jyjy/");
-                resultFile = fileUtils.creatSDFile("/jyjy/" + fileName);
+                fileUtils.creatSDDir(FileUtils.DOWNLOAD_DIR);
+                resultFile = fileUtils.creatSDFile(FileUtils.DOWNLOAD_DIR + fileName);
                 output = new FileOutputStream(resultFile);
                 if(fileLength == 0) {
                     fileLength = conn.getContentLength();

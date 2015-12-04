@@ -122,7 +122,7 @@ public class StdDetailActivity extends AppCompatActivity {
                 }
                 else {
                     tvFilesTitle.setTextColor(Color.rgb(255, 0, 0));
-                    tvFilesTitle.setText(tvFilesTitle.getText()+"\r\n没有全文访问权限");
+                    tvFilesTitle.setText(tvFilesTitle.getText() + "\r\n没有全文访问权限");
                 }
 
                 JSONArray oldVers = result.getJSONObject("oldVers").getJSONArray("data");
@@ -283,17 +283,31 @@ public class StdDetailActivity extends AppCompatActivity {
 
                 //new DownloadFileAsync(StdDetailActivity.this).execute(fileId,fileName,String.valueOf(filSize));
 
-                String urlString = String.format(global.getFileDownloadUrl()+"/%s;jsessionid=%s",fileId,global.getMyContext().get("token"));
-                AsyncTask task = new DownloadFileAsync(
-                        StdDetailActivity.this,
-                        new Handler() {
-                            public void handleMessage(Message msg) {
-                                Uri uri = (Uri) msg.obj;
-                                FileUtils.openFile(StdDetailActivity.this, uri);
-                            }
-                        }
+                int lastDotPosition = fileName.lastIndexOf(".");
+                String fileNameWidthCache = String.format(
+                        "%s-%s.%s",
+                        fileName.substring(0, lastDotPosition),
+                        fileId.substring(0, fileId.indexOf("-")),
+                        fileName.substring(lastDotPosition + 1)
                 );
-                task.execute(urlString,fileName);
+                FileUtils fileUtils = new FileUtils();
+                File file = new File(fileUtils.getSDPATH()+FileUtils.DOWNLOAD_DIR+fileNameWidthCache);
+                if(file.exists()){
+                    FileUtils.openFile(StdDetailActivity.this, Uri.fromFile(file));
+                }
+                else {
+                    String urlString = String.format(global.getFileDownloadUrl() + "/%s;jsessionid=%s", fileId, global.getMyContext().get("token"));
+                    AsyncTask task = new DownloadFileAsync(
+                            StdDetailActivity.this,
+                            new Handler() {
+                                public void handleMessage(Message msg) {
+                                    Uri uri = (Uri) msg.obj;
+                                    FileUtils.openFile(StdDetailActivity.this, uri);
+                                }
+                            }
+                    );
+                    task.execute(urlString, fileNameWidthCache);
+                }
 
                 /*try {
                     //new DownloadFileAsync(StdDetailActivity.this).execute(urlString,fileName);

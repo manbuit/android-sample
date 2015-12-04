@@ -93,7 +93,7 @@ public class DataRequest {
         return jsonObject;
     }
 
-    public Request genRequest(StdApp app, final Handler handler){
+    public Request genRequest(final StdApp app, final Handler handler){
         final DataRequest me = this;
 
         String url = String.format("%s;jsessionid=%s", app.getDataLoadUrl(), app.getMyContext().get("token").toString());
@@ -125,8 +125,8 @@ public class DataRequest {
                     public void onErrorResponse(VolleyError volleyError) {
                         // TODO 这里需要增加请求错误后的处理
                         //showProgress(false);
-                        //Toast.makeText(getActivity(), volleyError.getMessage(), Toast.LENGTH_SHORT).show();
-                        System.out.println(volleyError.getMessage());
+                        Toast.makeText(app.getApplicationContext(), volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+                        //System.out.println(volleyError.getMessage());
                     }
                 }
         ){
