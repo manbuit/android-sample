@@ -287,7 +287,7 @@ public class StdDetailActivity extends AppCompatActivity {
                 String fileNameWidthCache = String.format(
                         "%s-%s.%s",
                         fileName.substring(0, lastDotPosition),
-                        fileId.substring(0, fileId.indexOf("-")),
+                        fileId.substring(fileId.lastIndexOf("-")+1),
                         fileName.substring(lastDotPosition + 1)
                 );
                 FileUtils fileUtils = new FileUtils();
