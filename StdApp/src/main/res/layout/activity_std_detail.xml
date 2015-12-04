@@ -20,10 +20,10 @@
             android:layout_margin="4dp"
             android:padding="4dp"
             android:text="标准号："
-            android:textScaleX="1.1"
+            android:textSize="18sp"
             android:textStyle = "bold"
             android:background="#FFF"
-            android:id="@+id/detail_tv_code" />
+            android:id="@+id/detail_tv_code" /><!--android:textScaleX="1.1"-->
 
         <!--标准名称-->
         <TextView

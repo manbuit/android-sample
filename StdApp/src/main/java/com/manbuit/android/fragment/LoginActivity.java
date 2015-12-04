@@ -70,8 +70,10 @@ public class LoginActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         //mToolbar.setTitle(R.string.app_name);
-        mToolbar.setTitle("  " + getResources().getString(R.string.app_name));
+        mToolbar.setTitle("  "+getResources().getString(R.string.app_name));
+        mToolbar.setSubtitle("    "+getResources().getString(R.string.app_productor));
         mToolbar.setLogo(R.drawable.ic_jyjy);
+        mToolbar.setLogoDescription("sss");
 
         //环境切换功能未完成，该菜单暂不启用
         //mToolbar.inflateMenu(R.menu.menu_login);

@@ -77,12 +77,18 @@ public class FavoriteFragment extends ListFragment implements SwipeRefreshLayout
                     stdEntities.add(stdEntity);
                 }
 
-                adapter.notifyDataSetChanged();
+                if(dataList.length()>0) {
+                    adapter.notifyDataSetChanged();
+                    if(adapter.getCount()<=PAGE_SIZE) {
+                        Toast.makeText(getActivity(), String.format("共计 %d 条记录",data.getInt("totalCount")), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    //Toast.makeText(getActivity(), "已经加载全部数据", Toast.LENGTH_SHORT).show();
+                }
+
                 accountLayout.setRefreshing(false);
 
-                if(adapter.getCount()<=PAGE_SIZE) {
-                    Toast.makeText(getActivity(), String.format("共计 %d 条记录",data.getInt("totalCount")), Toast.LENGTH_SHORT).show();
-                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
