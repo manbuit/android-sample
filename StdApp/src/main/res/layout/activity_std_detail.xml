@@ -85,6 +85,7 @@
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:layout_marginBottom="0dp"
+            android:id="@+id/detail_tv_files_title"
             android:text="电子标准"/>
         <com.manbuit.android.fragment.view.MyListView
             android:layout_width="match_parent"

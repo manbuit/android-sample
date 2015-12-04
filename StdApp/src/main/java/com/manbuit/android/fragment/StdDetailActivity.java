@@ -72,6 +72,7 @@ public class StdDetailActivity extends AppCompatActivity {
     TextView tvSsrq;
     TextView tvFzrq;
     TextView tvSummary;
+    TextView tvFilesTitle;
     ListView tvFiles;
     ListView tvOldVers;
     ListView tvNewVers;
@@ -114,8 +115,15 @@ public class StdDetailActivity extends AppCompatActivity {
                 );
                 tvSummary.setText(root.getString("summary").equals("null")?"":root.getString("summary"));
 
+                int privilege = root.getInt("privilegeCount"); //全文访问权限，大于0表示有权限
                 JSONArray files = result.getJSONObject("files").getJSONArray("data");
-                tvFiles.setAdapter(new StdFileListAdapter(StdDetailActivity.this,files));
+                if(privilege>0) {
+                    tvFiles.setAdapter(new StdFileListAdapter(StdDetailActivity.this, files));
+                }
+                else {
+                    tvFilesTitle.setTextColor(Color.rgb(255, 0, 0));
+                    tvFilesTitle.setText(tvFilesTitle.getText()+"\r\n没有全文访问权限");
+                }
 
                 JSONArray oldVers = result.getJSONObject("oldVers").getJSONArray("data");
                 tvOldVers.setAdapter(new StdListAdapter(StdDetailActivity.this,oldVers));
@@ -149,6 +157,7 @@ public class StdDetailActivity extends AppCompatActivity {
         tvSsrq = (TextView) findViewById(R.id.detail_tv_ssrq);
         tvFzrq = (TextView) findViewById(R.id.detail_tv_fzrq);
         tvSummary = (TextView) findViewById(R.id.detail_tv_summary);
+        tvFilesTitle = (TextView) findViewById(R.id.detail_tv_files_title);
         tvFiles = (ListView) findViewById(R.id.detail_tv_files);
         tvOldVers = (ListView) findViewById(R.id.detail_tv_old_vers);
         tvNewVers = (ListView) findViewById(R.id.detail_tv_new_vers);
@@ -184,10 +193,16 @@ public class StdDetailActivity extends AppCompatActivity {
                 final DataRequest dataRequest = new DataRequest();
 
                 //加载标准信息
-                DataRequestUnit root = new DataRequestUnit();
-                root.setDs("12814070-5537-b95c-e4f9-abfc0d460765");
-                root.setFilter(new Filter("id", "string", "=", "'" + stdId + "'", null));
-                dataRequest.getRoot().add(root);
+                DataRequestUnit stdInfo = new DataRequestUnit();
+                stdInfo.setDs("12814070-5537-b95c-e4f9-abfc0d460765");
+                stdInfo.setFilter(new Filter("id", "string", "=", "'" + stdId + "'", null));
+                dataRequest.getRoot().add(stdInfo);
+
+                //访问权限
+                DataRequestUnit privilege = new DataRequestUnit();
+                privilege.setDs("d5c9db56-fdc4-de8f-0142-d397353af522");
+                privilege.getParams().put("stdId", stdId);
+                dataRequest.getRoot().add(privilege);
 
                 //加载电子标准
                 DataRequestUnit files = new DataRequestUnit();
