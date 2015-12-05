@@ -1,180 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:background="#EEE"
-    >
-    <LinearLayout
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.manbuit.android.fragment.StdDetailActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_detail"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:theme="@style/ThemeOverlay.AppCompat.ActionBar"></android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="6dp"
-        tools:context="com.manbuit.android.fragment.StdDetailActivity">
+        android:background="#EEE">
 
-        <!--标准号-->
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:padding="4dp"
-            android:text="标准号："
-            android:textSize="18sp"
-            android:textStyle = "bold"
-            android:background="#FFF"
-            android:id="@+id/detail_tv_code" /><!--android:textScaleX="1.1"-->
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="6dp">
 
-        <!--标准名称-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:padding="4dp"
-            android:text="标准名称："
-            android:background="#FFF"
-            android:id="@+id/detail_tv_name" />
+            <!--标准号-->
+            <TextView
+                android:id="@+id/detail_tv_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="#FFF"
+                android:padding="4dp"
+                android:text="标准号："
+                />
+            <!--
+                android:textScaleX="1.1"
+                android:textStyle="bold"
+                android:textSize="18sp"
+            -->
 
-        <!--标准类别-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:padding="4dp"
-            android:text="标准类别："
-            android:background="#FFF"
-            android:id="@+id/detail_tv_category" />
+            <!--标准名称-->
+            <TextView
+                android:id="@+id/detail_tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="#FFF"
+                android:padding="4dp"
+                android:text="标准名称：" />
 
-        <!--发布日期-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:padding="4dp"
-            android:text="发布日期："
-            android:background="#FFF"
-            android:id="@+id/detail_tv_fbrq" />
+            <!--标准类别-->
+            <TextView
+                android:id="@+id/detail_tv_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="#FFF"
+                android:padding="4dp"
+                android:text="标准类别：" />
 
-        <!--实施日期-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:padding="4dp"
-            android:text="实施日期："
-            android:background="#FFF"
-            android:id="@+id/detail_tv_ssrq" />
+            <!--发布日期-->
+            <TextView
+                android:id="@+id/detail_tv_fbrq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="#FFF"
+                android:padding="4dp"
+                android:text="发布日期：" />
 
-        <!--废止日期-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:padding="4dp"
-            android:text="废止日期："
-            android:background="#FFF"
-            android:id="@+id/detail_tv_fzrq" />
+            <!--实施日期-->
+            <TextView
+                android:id="@+id/detail_tv_ssrq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="#FFF"
+                android:padding="4dp"
+                android:text="实施日期：" />
 
-        <!--电子标准-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:background="#FFF"
-            android:layout_marginTop="6dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginBottom="0dp"
-            android:id="@+id/detail_tv_files_title"
-            android:text="电子标准"/>
-        <com.manbuit.android.fragment.view.MyListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/detail_tv_files"
-            android:padding="4dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:dividerHeight="0dp"
-            android:background="#FFF"
-            android:divider="@android:color/transparent"
-            />
+            <!--废止日期-->
+            <TextView
+                android:id="@+id/detail_tv_fzrq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="#FFF"
+                android:padding="4dp"
+                android:text="废止日期：" />
 
-        <!--旧版标准-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:background="#FFF"
-            android:layout_marginTop="6dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginBottom="0dp"
-            android:text="旧版标准"/>
-        <com.manbuit.android.fragment.view.MyListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/detail_tv_old_vers"
-            android:padding="4dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:dividerHeight="0dp"
-            android:background="#FFF"
-            android:divider="@android:color/transparent"
-            />
+            <!--电子标准-->
+            <TextView
+                android:id="@+id/detail_tv_files_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="6dp"
+                android:background="#FFF"
+                android:padding="4dp"
+                android:text="电子标准" />
 
-        <!--新版标准-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:background="#FFF"
-            android:layout_marginTop="6dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginBottom="0dp"
-            android:text="新版标准"/>
-        <com.manbuit.android.fragment.view.MyListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/detail_tv_new_vers"
-            android:padding="4dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:dividerHeight="0dp"
-            android:background="#FFF"
-            android:divider="@android:color/transparent"
-            />
+            <com.manbuit.android.fragment.view.MyListView
+                android:id="@+id/detail_tv_files"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="0dp"
+                android:background="#FFF"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
+                android:padding="4dp" />
 
-        <!--标准摘要-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:background="#FFF"
-            android:layout_marginTop="6dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginBottom="0dp"
-            android:text="标准摘要"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:text=""
-            android:background="#FFF"
-            android:id="@+id/detail_tv_summary" />
-        <!--
-            android:visibility="gone"-->
-    </LinearLayout>
-</ScrollView>
+            <!--旧版标准-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="6dp"
+                android:background="#FFF"
+                android:padding="4dp"
+                android:text="旧版标准" />
 
+            <com.manbuit.android.fragment.view.MyListView
+                android:id="@+id/detail_tv_old_vers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="0dp"
+                android:background="#FFF"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
+                android:padding="4dp" />
+
+            <!--新版标准-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="6dp"
+                android:background="#FFF"
+                android:padding="4dp"
+                android:text="新版标准" />
+
+            <com.manbuit.android.fragment.view.MyListView
+                android:id="@+id/detail_tv_new_vers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="0dp"
+                android:background="#FFF"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
+                android:padding="4dp" />
+
+            <!--标准摘要-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="6dp"
+                android:background="#FFF"
+                android:padding="4dp"
+                android:text="标准摘要" />
+
+            <TextView
+                android:id="@+id/detail_tv_summary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="0dp"
+                android:background="#FFF"
+                android:padding="4dp"
+                android:text="" />
+            <!--
+                android:visibility="gone"-->
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

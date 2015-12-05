@@ -42,4 +42,12 @@
         <!--<item name="android:layout_marginLeft">10dp</item>
         <item name="android:paddingLeft">20dp</item>-->
     </style>
+
+    <style name="StdCodeTitle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="StdCodeSubTitle">
+        <item name="android:textSize">12sp</item>
+    </style>
 </resources>

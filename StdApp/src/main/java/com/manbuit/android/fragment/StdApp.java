@@ -41,7 +41,7 @@ public class StdApp extends Application {
     private final static String URL_TEMPLATE = "http://%s:%s/%s";
 
     //环境参数：0表示正式环境；1表示测试环境；2表示开发环境
-    private final int DEFAULT_INDEX = 2;
+    private final int DEFAULT_INDEX = 1;
 
     public String getLoginCheckUrl() {
         String url = null;

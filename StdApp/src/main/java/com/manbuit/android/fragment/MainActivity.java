@@ -84,7 +84,7 @@ public class MainActivity
 
         queue = Volley.newRequestQueue(MainActivity.this);
 
-        toolbar= (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbar.setTitle("JYJY");
         // Inflate a menu to be displayed in the toolbar
         toolbar.inflateMenu(R.menu.menu_main);

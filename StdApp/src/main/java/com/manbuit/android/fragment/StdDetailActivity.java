@@ -12,16 +12,20 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ShareActionProvider;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -77,6 +81,9 @@ public class StdDetailActivity extends AppCompatActivity {
     ListView tvOldVers;
     ListView tvNewVers;
 
+    Toolbar toolbar;
+    ShareActionProvider mShareActionProvider;
+
     RequestQueue queue;
 
     final Handler loadDataHandler = new Handler(){
@@ -84,13 +91,20 @@ public class StdDetailActivity extends AppCompatActivity {
             JSONObject result = (JSONObject) msg.obj;
             try {
                 JSONObject root = result.getJSONObject("root");
-                tvCode.setText(String.format("标准号：%s",root.getString("code")));
+
+                toolbar.setTitle(root.getString("code"));
+                toolbar.setTitleTextAppearance(StdDetailActivity.this, R.style.StdCodeTitle);
+                toolbar.setSubtitle(root.getString("name"));
+                toolbar.setSubtitleTextAppearance(StdDetailActivity.this, R.style.StdCodeSubTitle);
                 if(root.getString("status").equals("作废")){
-                    tvCode.setTextColor(Color.rgb(255, 0, 0));
+                    toolbar.setTitleTextColor(Color.rgb(255, 0, 0));
                 }
                 else {
-                    tvCode.setTextColor(Color.rgb(0, 127, 0));
+                    toolbar.setTitleTextColor(Color.rgb(0, 127, 0));
                 }
+                tvCode.setHint(root.getString("code"));
+                tvCode.setText(String.format("标准号：%s", root.getString("code")));
+                tvName.setHint(root.getString("name"));
                 //tvName.setText(String.format("标准名称：《%s》", root.getString("name")));
                 tvName.setText(String.format("标准名称：%s", root.getString("name")));
                 tvCategory.setText(String.format("标准类别：%s", root.getString("category_name")));
@@ -161,6 +175,38 @@ public class StdDetailActivity extends AppCompatActivity {
         tvFiles = (ListView) findViewById(R.id.detail_tv_files);
         tvOldVers = (ListView) findViewById(R.id.detail_tv_old_vers);
         tvNewVers = (ListView) findViewById(R.id.detail_tv_new_vers);
+
+        toolbar= (Toolbar) findViewById(R.id.toolbar_detail);
+        toolbar.inflateMenu(R.menu.menu_detail);
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // Handle the menu item
+                //Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
+                switch (item.getItemId()) {
+                    case R.id.action_favorite:
+                        Toast.makeText(StdDetailActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.action_share:
+                        //Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("image/*");
+                        intent.putExtra(Intent.EXTRA_SUBJECT, tvCode.getText());
+                        intent.putExtra(
+                                Intent.EXTRA_TEXT,
+                                String.format("%s\r\n《%s》", tvCode.getHint(),tvName.getHint())
+                        );
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(Intent.createChooser(intent, getTitle()));
+                        Toast.makeText(StdDetailActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
 
         tvOldVers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
