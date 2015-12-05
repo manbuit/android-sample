@@ -10,7 +10,9 @@
         android:orderInCategory="90"
         android:title="收藏"
         android:icon="@drawable/favorite72"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        android:visible="false"
+        />
 
     <item
         android:id="@+id/action_share"

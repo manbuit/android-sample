@@ -27,5 +27,6 @@
 
     <string name="r_login_path">logincheck?json</string>
     <string name="r_data_load">api/data/load</string>
+    <string name="r_data_update">api/data/update</string>
     <string name="r_file_download">api/file/download</string>
 </resources>

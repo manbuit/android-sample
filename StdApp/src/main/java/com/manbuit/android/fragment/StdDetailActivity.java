@@ -35,6 +35,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.manbuit.android.fragment.adapter.StdFileListAdapter;
 import com.manbuit.android.fragment.adapter.StdListAdapter;
+import com.manbuit.android.fragment.dataRequest.Column;
 import com.manbuit.android.fragment.dataRequest.DataRequest;
 import com.manbuit.android.fragment.dataRequest.DataRequestUnit;
 import com.manbuit.android.fragment.dataRequest.Filter;
@@ -61,8 +62,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 public class StdDetailActivity extends AppCompatActivity {
@@ -102,6 +106,19 @@ public class StdDetailActivity extends AppCompatActivity {
                 else {
                     toolbar.setTitleTextColor(Color.rgb(0, 127, 0));
                 }
+
+                MenuItem favoriteMenu = toolbar.getMenu().findItem(R.id.action_favorite);
+                if(!root.has("favoriteId") || TextUtils.isEmpty(root.getString("favoriteId"))){
+                    favoriteMenu.setIcon(R.drawable.favorite72);
+                    favoriteMenu.setTitle("添加收藏");
+                }
+                else {
+                    favoriteMenu.setIcon(R.drawable.favorited72);
+                    favoriteMenu.setTitle("取消收藏");
+                    favoriteMenu.setTitleCondensed(root.getString("favoriteId"));
+                }
+                favoriteMenu.setVisible(true);
+
                 tvCode.setHint(root.getString("code"));
                 tvCode.setText(String.format("标准号：%s", root.getString("code")));
                 tvName.setHint(root.getString("name"));
@@ -181,12 +198,111 @@ public class StdDetailActivity extends AppCompatActivity {
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public boolean onMenuItemClick(final MenuItem item) {
                 // Handle the menu item
                 //Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
                 switch (item.getItemId()) {
                     case R.id.action_favorite:
-                        Toast.makeText(StdDetailActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(StdDetailActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
+                        if(item.getTitle().equals("添加收藏")){
+                            try {
+                                final String favoriteId = UUID.randomUUID().toString();
+                                JSONObject itemFavorite = new JSONObject();
+                                itemFavorite.put("ds", "db0efa35-3d09-f4b4-6e22-e1ee4690f008");
+                                itemFavorite.put("_method", "PUT");
+                                Map<String,Object> fieldValues = new LinkedHashMap<String, Object>();
+                                fieldValues.put("id", favoriteId);
+                                fieldValues.put("std",stdId);
+                                fieldValues.put("owner",global.getMyContext().get("userId").toString());
+                                JSONObject data = new JSONObject(fieldValues);
+                                itemFavorite.put("data",data);
+                                final JSONArray dr = new JSONArray();
+                                dr.put(itemFavorite);
+
+                                String url = String.format("%s;jsessionid=%s", global.getDataUpdateUrl(), global.getMyContext().get("token").toString());
+                                Request request = new StringRequest(
+                                        Request.Method.POST,
+                                        url,
+                                        new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String s) {
+                                                Toast.makeText(global.getApplicationContext(), "添加收藏成功", Toast.LENGTH_SHORT).show();
+                                                item.setIcon(R.drawable.favorited72);
+                                                item.setTitle("取消收藏");
+                                                item.setTitleCondensed(favoriteId);
+                                            }
+                                        },
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError volleyError) {
+                                                // TODO 这里需要增加请求错误后的处理
+                                                //showProgress(false);
+                                                Toast.makeText(global.getApplicationContext(), volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+                                                //System.out.println(volleyError.getMessage());
+                                            }
+                                        }
+                                ){
+                                    @Override
+                                    protected Map<String, String> getParams() {
+                                        //在这里设置需要post的参数
+                                        Map<String, String> map = new HashMap<String, String>();
+                                        map.put("dr", dr.toString());
+                                        return map;
+                                    }
+                                };
+                                queue.add(request);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }else if(item.getTitle().equals("取消收藏")){
+                            try {
+                                final String favoriteId = item.getTitleCondensed().toString();
+                                JSONObject itemFavorite = new JSONObject();
+                                itemFavorite.put("ds", "db0efa35-3d09-f4b4-6e22-e1ee4690f008");
+                                itemFavorite.put("id", favoriteId);
+                                itemFavorite.put("_method", "DELETE");
+                                final JSONArray dr = new JSONArray();
+                                dr.put(itemFavorite);
+
+                                String url = String.format("%s;jsessionid=%s", global.getDataUpdateUrl(), global.getMyContext().get("token").toString());
+                                Request request = new StringRequest(
+                                        Request.Method.POST,
+                                        url,
+                                        new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String s) {
+                                                Toast.makeText(global.getApplicationContext(), "取消收藏成功", Toast.LENGTH_SHORT).show();
+                                                item.setIcon(R.drawable.favorite72);
+                                                item.setTitle("添加收藏");
+                                                item.setTitleCondensed(null);
+                                            }
+                                        },
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError volleyError) {
+                                                // TODO 这里需要增加请求错误后的处理
+                                                //showProgress(false);
+                                                Toast.makeText(global.getApplicationContext(), volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+                                                //System.out.println(volleyError.getMessage());
+                                            }
+                                        }
+                                ){
+                                    @Override
+                                    protected Map<String, String> getParams() {
+                                        //在这里设置需要post的参数
+                                        Map<String, String> map = new HashMap<String, String>();
+                                        map.put("dr", dr.toString());
+                                        return map;
+                                    }
+                                };
+                                queue.add(request);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
                         break;
                     case R.id.action_share:
                         //Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
@@ -249,6 +365,24 @@ public class StdDetailActivity extends AppCompatActivity {
                 privilege.setDs("d5c9db56-fdc4-de8f-0142-d397353af522");
                 privilege.getParams().put("stdId", stdId);
                 dataRequest.getRoot().add(privilege);
+
+                //访问权限
+                DataRequestUnit favorite = new DataRequestUnit();
+                favorite.setDs("db0efa35-3d09-f4b4-6e22-e1ee4690f008");
+                favorite.setFields(
+                        Arrays.asList(
+                                new Column("id", "favoriteId")
+                        )
+                );
+                favorite.setFilter(
+                        new Filter("and",null,null,null,
+                            Arrays.asList(
+                                    new Filter("owner","string","=",  String.format("'%s'",global.getMyContext().get("userId").toString()) ,null),
+                                    new Filter("std","string","=", String.format("'%s'",stdId) ,null)
+                            )
+                    )
+                );
+                dataRequest.getRoot().add(favorite);
 
                 //加载电子标准
                 DataRequestUnit files = new DataRequestUnit();
@@ -333,15 +467,14 @@ public class StdDetailActivity extends AppCompatActivity {
                 String fileNameWidthCache = String.format(
                         "%s-%s.%s",
                         fileName.substring(0, lastDotPosition),
-                        fileId.substring(fileId.lastIndexOf("-")+1),
+                        fileId.substring(fileId.lastIndexOf("-") + 1),
                         fileName.substring(lastDotPosition + 1)
                 );
                 FileUtils fileUtils = new FileUtils();
-                File file = new File(fileUtils.getSDPATH()+FileUtils.DOWNLOAD_DIR+fileNameWidthCache);
-                if(file.exists()){
+                File file = new File(fileUtils.getSDPATH() + FileUtils.DOWNLOAD_DIR + fileNameWidthCache);
+                if (file.exists()) {
                     FileUtils.openFile(StdDetailActivity.this, Uri.fromFile(file));
-                }
-                else {
+                } else {
                     String urlString = String.format(global.getFileDownloadUrl() + "/%s;jsessionid=%s", fileId, global.getMyContext().get("token"));
                     AsyncTask task = new DownloadFileAsync(
                             StdDetailActivity.this,

@@ -111,6 +111,40 @@ public class StdApp extends Application {
         return url;
     }
 
+    public String getDataUpdateUrl() {
+        String url = null;
+        int choice = sp.getInt("env",DEFAULT_INDEX);
+        switch(choice){
+            case 0:
+                url = String.format(
+                        URL_TEMPLATE,
+                        getString(R.string.r_server_host_p),
+                        getString(R.string.r_server_port_p),
+                        getString(R.string.r_data_update)
+                );
+                break;
+            case 1:
+                url = String.format(
+                        URL_TEMPLATE,
+                        getString(R.string.r_server_host_t),
+                        getString(R.string.r_server_port_t),
+                        getString(R.string.r_data_update)
+                );
+                break;
+            case 2:
+                url =  String.format(
+                        URL_TEMPLATE,
+                        getString(R.string.r_server_host_d),
+                        getString(R.string.r_server_port_d),
+                        getString(R.string.r_data_update)
+                );
+                break;
+            default:
+                break;
+        }
+        return url;
+    }
+
     public String getFileDownloadUrl() {
         String url = null;
         int choice = sp.getInt("env",DEFAULT_INDEX);
