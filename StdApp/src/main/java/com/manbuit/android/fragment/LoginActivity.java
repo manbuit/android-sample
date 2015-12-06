@@ -149,6 +149,9 @@ public class LoginActivity extends AppCompatActivity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);;
+        UpdateAPK.update(LoginActivity.this,global, queue, false);
     }
 
     /*@Override

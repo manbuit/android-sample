@@ -19,6 +19,6 @@
         android:orderInCategory="90"
         android:title="分享"
         android:icon="@drawable/share72"
-        app:showAsAction="always"/><!--app:actionViewClass="android.support.v7.widget.ShareView"-->
+        app:showAsAction="always"/>
 
 </menu>

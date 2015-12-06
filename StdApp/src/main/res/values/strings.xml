@@ -29,4 +29,5 @@
     <string name="r_data_load">api/data/load</string>
     <string name="r_data_update">api/data/update</string>
     <string name="r_file_download">api/file/download</string>
+    <string name="r_apk_update">appUpdate</string>
 </resources>
