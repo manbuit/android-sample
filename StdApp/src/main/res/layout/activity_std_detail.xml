@@ -23,9 +23,11 @@
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#EEE">
+        ><!--android:background="#EEE"--><!--
+        android:background="@drawable/repeat_bg"-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,15 +36,16 @@
             android:padding="6dp">
 
             <!--标准号-->
+
             <TextView
                 android:id="@+id/detail_tv_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:background="#FFF"
                 android:padding="4dp"
                 android:text="标准号："
-                />
+                android:singleLine="false"
+                android:background="#11336699" />
             <!--
                 android:textScaleX="1.1"
                 android:textStyle="bold"
@@ -55,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:background="#FFF"
+                android:background="#11336699"
                 android:padding="4dp"
                 android:text="标准名称：" />
 
@@ -65,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:background="#FFF"
+                android:background="#11336699"
                 android:padding="4dp"
                 android:text="标准类别：" />
 
@@ -75,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:background="#FFF"
+                android:background="#11336699"
                 android:padding="4dp"
                 android:text="发布日期：" />
 
@@ -85,7 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:background="#FFF"
+                android:background="#11336699"
                 android:padding="4dp"
                 android:text="实施日期：" />
 
@@ -95,7 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:background="#FFF"
+                android:background="#11336699"
                 android:padding="4dp"
                 android:text="废止日期：" />
 
@@ -108,7 +111,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
                 android:layout_marginTop="6dp"
-                android:background="#FFF"
+                android:background="#11336699"
                 android:padding="4dp"
                 android:text="电子标准" />
 
@@ -120,7 +123,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
                 android:layout_marginTop="0dp"
-                android:background="#FFF"
+                android:background="#11336699"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="0dp"
                 android:padding="4dp" />
@@ -133,7 +136,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
                 android:layout_marginTop="6dp"
-                android:background="#FFF"
+                android:background="#11336699"
                 android:padding="4dp"
                 android:text="旧版标准" />
 
@@ -145,7 +148,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
                 android:layout_marginTop="0dp"
-                android:background="#FFF"
+                android:background="#11336699"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="0dp"
                 android:padding="4dp" />
@@ -158,7 +161,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
                 android:layout_marginTop="6dp"
-                android:background="#FFF"
+                android:background="#11336699"
                 android:padding="4dp"
                 android:text="新版标准" />
 
@@ -170,7 +173,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
                 android:layout_marginTop="0dp"
-                android:background="#FFF"
+                android:background="#11336699"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="0dp"
                 android:padding="4dp" />
@@ -183,7 +186,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
                 android:layout_marginTop="6dp"
-                android:background="#FFF"
+                android:background="#11336699"
                 android:padding="4dp"
                 android:text="标准摘要" />
 
@@ -195,7 +198,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
                 android:layout_marginTop="0dp"
-                android:background="#FFF"
+                android:background="#11336699"
                 android:padding="4dp"
                 android:text="" />
             <!--

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
@@ -85,6 +87,8 @@ public class StdDetailActivity extends AppCompatActivity {
     ListView tvOldVers;
     ListView tvNewVers;
 
+    ScrollView scrollView;
+
     Toolbar toolbar;
     ShareActionProvider mShareActionProvider;
 
@@ -101,7 +105,10 @@ public class StdDetailActivity extends AppCompatActivity {
                 toolbar.setSubtitle(root.getString("name"));
                 toolbar.setSubtitleTextAppearance(StdDetailActivity.this, R.style.StdCodeSubTitle);
                 if(root.getString("status").equals("作废")){
+                    toolbar.setTitle(String.format("%s (%s)",root.getString("code"),"作废"));
                     toolbar.setTitleTextColor(Color.rgb(255, 0, 0));
+                    scrollView.setBackgroundResource(R.drawable.repeat_bg);
+                    //toolbar.setTitleTextAppearance(StdDetailActivity.this,R.style.StdCodeSubTitle);
                 }
                 else {
                     toolbar.setTitleTextColor(Color.rgb(0, 127, 0));
@@ -195,6 +202,8 @@ public class StdDetailActivity extends AppCompatActivity {
 
         toolbar= (Toolbar) findViewById(R.id.toolbar_detail);
         toolbar.inflateMenu(R.menu.menu_detail);
+
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override

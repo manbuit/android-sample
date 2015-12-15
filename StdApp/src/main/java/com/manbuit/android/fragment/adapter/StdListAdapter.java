@@ -2,6 +2,7 @@ package com.manbuit.android.fragment.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,7 +90,10 @@ public class StdListAdapter extends BaseAdapter {
         nameView.setText(String.format("%s",stdEntity.getName()));
         if(stdEntity.getStatus()!=null) {
             if (stdEntity.getStatus().equals("作废")) {
+                codeView.setText(String.format("%s (%s)", stdEntity.getCode(), "作废"));
                 codeView.setTextColor(Color.rgb(255, 0, 0));
+                codeView.setText(String.format("%s (%s)", stdEntity.getCode(), "作废"));
+                //codeView.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
                 codeView.setTextColor(Color.rgb(0, 127, 0));
             }
