@@ -121,8 +121,9 @@ public class StdDBFragment extends ListFragment implements SwipeRefreshLayout.On
         data.setStart(start);
         data.setLimit(limit);
 
+        List<Filter> filters = new ArrayList<>();
+        filters.add(new Filter("status", "string", "=", "'在用'", null));
         if(searchText!=null && searchText.trim().length()>0) {
-            List<Filter> filters = new ArrayList<>();
             for (String seg : searchText.trim().replaceAll(" +", " ").split(" ")) {
                 if (seg.length() > 0) {
                     Filter filter = new Filter("or", null, null, null,
@@ -134,8 +135,8 @@ public class StdDBFragment extends ListFragment implements SwipeRefreshLayout.On
                     filters.add(filter);
                 }
             }
-            data.setFilter(new Filter("and", null, null, null, filters));
         }
+        data.setFilter(new Filter("and", null, null, null, filters));
 
         dataRequest.getNodes().put("data", data);
 
