@@ -131,7 +131,8 @@ public class FavoriteFragment extends ListFragment implements SwipeRefreshLayout
                     Filter filter = new Filter("or", null, null, null,
                             Arrays.asList(
                                     new Filter("code", "string", ">", "'" + seg + "'", null),
-                                    new Filter("name", "string", ">", "'" + seg + "'", null)
+                                    new Filter("name", "string", ">", "'" + seg + "'", null),
+                                    new Filter("category_name", "string", ">", "'" + seg + "'", null)
                             )
                     );
                     filters.add(filter);
