@@ -26,4 +26,6 @@ dependencies {
     /*compile 'com.joanzapata.pdfview:android-pdfview:1.0.4@aar'*/
     compile files('libs/volley-1.0.19.jar')
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'com.mikepenz:iconics-core:2.5.0@aar'
+    compile 'com.mikepenz:google-material-typeface:2.1.0.1.original@aar'
 }

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.Iconics;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -31,6 +34,13 @@ public class StdApp extends Application {
         setMyContext(new LinkedHashMap()); //初始化上下文变量
 
         sp = getSharedPreferences("mysp", Context.MODE_PRIVATE);
+
+
+        //only required if you add a custom or generic font on your own
+        Iconics.init(getApplicationContext());
+
+        //register custom fonts like this (or also provide a font definition file)
+        Iconics.registerFont(new GoogleMaterial());
     }
 
     @Override

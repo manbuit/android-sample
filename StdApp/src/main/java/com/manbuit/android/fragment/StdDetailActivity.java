@@ -46,6 +46,8 @@ import com.manbuit.android.fragment.model.StdEntity;
 import com.manbuit.android.fragment.model.StdFileEntity;
 import com.manbuit.android.fragment.utils.DownloadFileAsync;
 import com.manbuit.android.fragment.utils.FileUtils;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -126,8 +128,15 @@ public class StdDetailActivity extends AppCompatActivity {
                 }
                 favoriteMenu.setVisible(true);
 
+                MenuItem shareMenu = toolbar.getMenu().findItem(R.id.action_share);
+                shareMenu.setIcon(new IconicsDrawable(StdDetailActivity.this)
+                        .icon(GoogleMaterial.Icon.gmd_share)
+                        .color(Color.BLACK)
+                        .sizeDp(24));
+
                 tvCode.setHint(root.getString("code"));
                 tvCode.setText(String.format("标准号：%s", root.getString("code")));
+
                 tvName.setHint(root.getString("name"));
                 //tvName.setText(String.format("标准名称：《%s》", root.getString("name")));
                 tvName.setText(String.format("标准名称：%s", root.getString("name")));

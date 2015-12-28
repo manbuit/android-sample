@@ -17,8 +17,10 @@
     <item
         android:id="@+id/action_share"
         android:orderInCategory="90"
-        android:title="分享"
-        android:icon="@drawable/share72"
+        android:title=""
+        app:ico_icon="gmd_share"
+        app:ico_size="48dp"
         app:showAsAction="always"/>
+    <!--android:icon="@drawable/share72"-->
 
 </menu>
