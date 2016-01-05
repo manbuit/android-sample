@@ -4,12 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity" >
 
+    <!--<item
+        android:id="@+id/action_category"
+        android:orderInCategory="60"
+        android:title="类别：（全部）"
+        app:showAsAction="always"
+        app:ico_icon="gmd_share"
+        app:ico_size="48dp"/>-->
+    <item
+        android:id="@+id/action_query"
+        android:orderInCategory="70"
+        android:title=""
+        app:showAsAction="always"/>
+
     <item
         android:id="@+id/action_search"
         android:orderInCategory="80"
         android:title="搜索"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="always"/>
+        android:visible="false"
+        app:showAsAction="always"/> <!--取消此方式的查询，改用弹出窗-->
     <!--<item
         android:id="@+id/action_share"
         android:orderInCategory="90"

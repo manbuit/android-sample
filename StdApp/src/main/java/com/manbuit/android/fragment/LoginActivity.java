@@ -48,7 +48,7 @@ import java.util.Map;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    private RequestQueue queue;
+    //private RequestQueue queue;
 
     private StdApp global;
 
@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
 
         global = (StdApp) getApplication();
 
-        queue = Volley.newRequestQueue(LoginActivity.this);
+        //queue = Volley.newRequestQueue(LoginActivity.this);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         //mToolbar.setTitle(R.string.app_name);
@@ -151,7 +151,7 @@ public class LoginActivity extends AppCompatActivity {
         mProgressView = findViewById(R.id.login_progress);
 
         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);;
-        UpdateAPK.update(LoginActivity.this,global, queue, false);
+        UpdateAPK.update(LoginActivity.this, false);
     }
 
     /*@Override
@@ -293,7 +293,7 @@ public class LoginActivity extends AppCompatActivity {
                     return map;
                 }
             };
-            queue.add(stringRequest);
+            global.getRequestQueue().add(stringRequest);
 
             //Toast.makeText(LoginActivity.this, "等待登录结果...", Toast.LENGTH_SHORT);
         }

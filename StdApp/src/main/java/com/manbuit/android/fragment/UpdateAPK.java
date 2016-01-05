@@ -2,6 +2,7 @@ package com.manbuit.android.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -27,7 +28,15 @@ import org.json.JSONObject;
  */
 public class UpdateAPK {
 
-    public static void update(final Activity activity, final StdApp global,final RequestQueue queue, final boolean alert){
+    /**
+     * 检查更新，并提示
+     * @param activity
+     * @param alert 当版本相同时，是否提示，自动检查更新时，通常不需要更新时不用提示，而手工检查更新时需要提示
+     */
+    public static void update(final Activity activity, final boolean alert){
+
+        final StdApp global = (StdApp)activity.getApplication();
+
         Request request = new StringRequest(
                 Request.Method.GET,
                 global.getApkUpdateUrl(),
@@ -114,6 +123,6 @@ public class UpdateAPK {
                 }
         );
 
-        queue.add(request);
+        global.getRequestQueue().add(request);
     }
 }

@@ -18,6 +18,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ShareActionProvider;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -94,7 +95,7 @@ public class StdDetailActivity extends AppCompatActivity {
     Toolbar toolbar;
     ShareActionProvider mShareActionProvider;
 
-    RequestQueue queue;
+    //RequestQueue queue;
 
     final Handler loadDataHandler = new Handler(){
         public void handleMessage(Message msg){
@@ -107,7 +108,7 @@ public class StdDetailActivity extends AppCompatActivity {
                 toolbar.setSubtitle(root.getString("name"));
                 toolbar.setSubtitleTextAppearance(StdDetailActivity.this, R.style.StdCodeSubTitle);
                 if(root.getString("status").equals("作废")){
-                    toolbar.setTitle(String.format("%s (%s)",root.getString("code"),"作废"));
+                    toolbar.setTitle(Html.fromHtml(String.format("%s (%s)",root.getString("code"),"作废")));
                     toolbar.setTitleTextColor(Color.rgb(255, 0, 0));
                     scrollView.setBackgroundResource(R.drawable.repeat_bg);
                     //toolbar.setTitleTextAppearance(StdDetailActivity.this,R.style.StdCodeSubTitle);
@@ -128,14 +129,10 @@ public class StdDetailActivity extends AppCompatActivity {
                 }
                 favoriteMenu.setVisible(true);
 
-                MenuItem shareMenu = toolbar.getMenu().findItem(R.id.action_share);
-                shareMenu.setIcon(new IconicsDrawable(StdDetailActivity.this)
-                        .icon(GoogleMaterial.Icon.gmd_share)
-                        .color(Color.BLACK)
-                        .sizeDp(24));
-
                 tvCode.setHint(root.getString("code"));
                 tvCode.setText(String.format("标准号：%s", root.getString("code")));
+                //tvCode.setText(Html.fromHtml(String.format("<b>标准号：%s</b>", root.getString("code"))));
+                //tvCode.setText(Html.fromHtml(String.format("<strong>标准号：%s</strong>", root.getString("code"))));
 
                 tvName.setHint(root.getString("name"));
                 //tvName.setText(String.format("标准名称：《%s》", root.getString("name")));
@@ -193,7 +190,7 @@ public class StdDetailActivity extends AppCompatActivity {
 
         global = (StdApp)getApplication();
 
-        queue = Volley.newRequestQueue(StdDetailActivity.this);
+        //queue = Volley.newRequestQueue(StdDetailActivity.this);
 
         final String stdId = getIntent().getStringExtra("stdId");
 
@@ -211,6 +208,12 @@ public class StdDetailActivity extends AppCompatActivity {
 
         toolbar= (Toolbar) findViewById(R.id.toolbar_detail);
         toolbar.inflateMenu(R.menu.menu_detail);
+
+        MenuItem shareMenu = toolbar.getMenu().findItem(R.id.action_share);
+        shareMenu.setIcon(new IconicsDrawable(StdDetailActivity.this)
+                .icon(GoogleMaterial.Icon.gmd_share)
+                .color(Color.BLACK)
+                .sizeDp(24));
 
         scrollView = (ScrollView) findViewById(R.id.scrollView);
 
@@ -268,7 +271,7 @@ public class StdDetailActivity extends AppCompatActivity {
                                         return map;
                                     }
                                 };
-                                queue.add(request);
+                                global.getRequestQueue().add(request);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -314,7 +317,7 @@ public class StdDetailActivity extends AppCompatActivity {
                                         return map;
                                     }
                                 };
-                                queue.add(request);
+                                global.getRequestQueue().add(request);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -329,11 +332,11 @@ public class StdDetailActivity extends AppCompatActivity {
                         intent.putExtra(Intent.EXTRA_SUBJECT, tvCode.getText());
                         intent.putExtra(
                                 Intent.EXTRA_TEXT,
-                                String.format("%s\r\n《%s》", tvCode.getHint(),tvName.getHint())
+                                String.format("%s\r\n《%s》", tvCode.getHint(), tvName.getHint())
                         );
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(Intent.createChooser(intent, getTitle()));
-                        Toast.makeText(StdDetailActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(StdDetailActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;
@@ -427,8 +430,9 @@ public class StdDetailActivity extends AppCompatActivity {
                 ));
                 dataRequest.getNodes().put("newVers", newVers);
 
-                Request request = dataRequest.genRequest(global, loadDataHandler);
-                queue.add(request);
+                /*Request request = dataRequest.genRequest(global, loadDataHandler);
+                queue.add(request);*/
+                dataRequest.request(global, loadDataHandler);
             }
         }).start();
 

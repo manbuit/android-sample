@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.manbuit.android.fragment"
-    android:versionName="1.0.151217.1040-P"
+    android:versionName="1.0.160105.2150-P"
     android:versionCode="1"
     >
 
@@ -39,6 +39,10 @@
         <activity android:name=".StdDetailActivity" >
         </activity>
         <activity android:name=".StdFilePdfActivity" >
+        </activity>
+        <activity android:name=".StdQueryDialogActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/dialog">
         </activity>
     </application>
 

@@ -142,4 +142,9 @@ public class DataRequest {
 
         return request;
     }
+
+    public void request(final StdApp app, final Handler handler){
+        Request request = genRequest(app,handler);
+        app.getRequestQueue().add(request);
+    }
 }

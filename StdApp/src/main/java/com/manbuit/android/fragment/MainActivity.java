@@ -1,57 +1,25 @@
 package com.manbuit.android.fragment;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.FragmentManager;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatCallback;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.view.ActionMode;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.manbuit.android.fragment.dataRequest.DataRequest;
-import com.manbuit.android.fragment.dataRequest.DataRequestUnit;
-import com.manbuit.android.fragment.dataRequest.OrderBy;
-import com.manbuit.android.fragment.utils.DownloadFileAsync;
-import com.manbuit.android.fragment.utils.FileUtils;
+import com.manbuit.android.fragment.dataRequest.LoadData;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity
@@ -66,18 +34,19 @@ public class MainActivity
     FavoriteFragment favoriteFragment;
     StdDBFragment stdDBFragment;
 
+    Fragment[] fragments = new Fragment[3];
+    Map<String, Bundle> queryConds = new HashMap<>();
+
     TextView tvAccount;
     TextView tvFavorite;
     TextView tvStdDB;
     Toolbar toolbar;
 
-    SearchView searchView;
+    //SearchView searchView;
 
     StdApp global;
 
-    RequestQueue queue;
-
-    private FragmentManager fragmentManager;
+    //RequestQueue queue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,13 +56,23 @@ public class MainActivity
 
         global = (StdApp) getApplication();
 
-        queue = Volley.newRequestQueue(MainActivity.this);
+        //queue = Volley.newRequestQueue(MainActivity.this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbar.setTitle("JYJY");
         // Inflate a menu to be displayed in the toolbar
         toolbar.inflateMenu(R.menu.menu_main);
         //setSupportActionBar(toolbar);
+
+
+        MenuItem queryMenu = toolbar.getMenu().findItem(R.id.action_query);
+        queryMenu.setIcon(
+                new IconicsDrawable(MainActivity.this)
+                        .icon(GoogleMaterial.Icon.gmd_search)
+                        .color(Color.BLACK)
+                        .sizeDp(20)
+        );
+
 
         /*searchView = (SearchView) toolbar.getMenu().findItem(R.id.action_search).getActionView();
         //searchView.setIconified(false); //处于显示SearchView的状态
@@ -118,21 +97,46 @@ public class MainActivity
                 switch (item.getItemId()){
                     case R.id.action_update:
                         //Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
-                        UpdateAPK.update(MainActivity.this,global,queue, true);
+                        UpdateAPK.update(MainActivity.this, true);
                         break;
                     case R.id.action_logout:
                         //Toast.makeText(MainActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
+                        {
                         Intent intent = new Intent();
                         intent.setClass(MainActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
+                        }
+                        break;
+                    case R.id.action_query:
+                        /*AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("action_search");
+                        builder.setMessage("action_search:");
+                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                        builder.create().show();*/
+                        {
+
+                            Intent intent = new Intent();
+                            intent.setClass(MainActivity.this, StdQueryDialogActivity.class);
+
+                            // TODO 将当前fregment的查询参数传递到查询对话框中
+                            /*intent.putExtra("status","作废")
+                                    .putExtra("category","ASTM标准")
+                                    .putExtra("codename", "123");*/
+                            intent.putExtras(queryConds.get(getCurrentFragment().getClass().getName()));
+
+                            //startActivity(intent);
+                            startActivityForResult(intent,0);
+                        }
                         break;
                     default: break;
                 }
                 return true;
             }
         });
-
-        fragmentManager = getFragmentManager();
 
         tvAccount = (TextView) findViewById(R.id.tvAccount);
         tvFavorite = (TextView) findViewById(R.id.tvFavorite);
@@ -143,6 +147,28 @@ public class MainActivity
         tvStdDB.setOnClickListener(this);
 
         setTabSelection(0);
+    }
+
+    private Fragment getCurrentFragment() {
+        for(Fragment fragment : fragments){
+            if(fragment != null && fragment.isVisible()){
+                return fragment;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
+            case RESULT_OK:
+                //Toast.makeText(MainActivity.this,status, Toast.LENGTH_SHORT).show();
+                queryConds.put(getCurrentFragment().getClass().getName(),data.getExtras());
+                ((LoadData)getCurrentFragment()).loadData(queryConds.get(getCurrentFragment().getClass().getName()));
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -173,15 +199,22 @@ public class MainActivity
         // 每次选中之前先清楚掉上次的选中状态
         clearSelection();
         // 开启一个Fragment事务
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
         // 先隐藏掉所有的Fragment，以防止有多个Fragment显示在界面上的情况
-        hideFragments(transaction);
+        hideAllFragments(transaction);
+
+        Bundle queryCond = new Bundle();
+        queryCond.putString("status","");
+        queryCond.putString("category","");
+        queryCond.putString("codename", "");
         switch (index) {
             case 0:
                 //tvStdDB.setBackgroundColor(Color.WHITE);
                 tvStdDB.setBackgroundColor(Color.parseColor(BG_COLOR_FOCUS));
                 if (stdDBFragment == null) {
                     stdDBFragment = new StdDBFragment();
+                    fragments[0] = stdDBFragment;
+                    queryConds.put(StdDBFragment.class.getName(),queryCond);
                     transaction.add(R.id.content, stdDBFragment);
                 } else {
                     transaction.show(stdDBFragment);
@@ -192,6 +225,8 @@ public class MainActivity
                 tvAccount.setBackgroundColor(Color.parseColor(BG_COLOR_FOCUS));
                 if (accountFragment == null) {
                     accountFragment = new AccountFragment();
+                    fragments[1] = accountFragment;
+                    queryConds.put(AccountFragment.class.getName(),queryCond);
                     transaction.add(R.id.content, accountFragment);
                 } else {
                     transaction.show(accountFragment);
@@ -202,6 +237,8 @@ public class MainActivity
                 tvFavorite.setBackgroundColor(Color.parseColor(BG_COLOR_FOCUS));
                 if (favoriteFragment == null) {
                     favoriteFragment = new FavoriteFragment();
+                    fragments[2] = favoriteFragment;
+                    queryConds.put(FavoriteFragment.class.getName(),queryCond);
                     transaction.add(R.id.content, favoriteFragment);
                 } else {
                     transaction.show(favoriteFragment);
@@ -228,8 +265,13 @@ public class MainActivity
      *
      * @param transaction 用于对Fragment执行操作的事务
      */
-    private void hideFragments(FragmentTransaction transaction) {
-        if (accountFragment != null) {
+    private void hideAllFragments(FragmentTransaction transaction) {
+        for(Fragment fragment : fragments){
+            if(fragment!=null) {
+                transaction.hide(fragment);
+            }
+        }
+        /*if (accountFragment != null) {
             transaction.hide(accountFragment);
         }
         if (favoriteFragment != null) {
@@ -237,32 +279,6 @@ public class MainActivity
         }
         if (stdDBFragment != null) {
             transaction.hide(stdDBFragment);
-        }
+        }*/
     }
-
-    // TODO 实现菜单
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //return super.onCreateOptionsMenu(menu);
-
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }*/
-
-
-/*    @Override
-    public void onSupportActionModeStarted(ActionMode mode) {
-
-    }
-
-    @Override
-    public void onSupportActionModeFinished(ActionMode mode) {
-
-    }
-
-    @Nullable
-    @Override
-    public ActionMode onWindowStartingSupportActionMode(ActionMode.Callback callback) {
-        return null;
-    }*/
 }

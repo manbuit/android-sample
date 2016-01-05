@@ -2,6 +2,7 @@ package com.manbuit.android.fragment.utils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -24,11 +25,11 @@ public class DownloadFileAsync extends AsyncTask<Object, Integer, Uri> {
     ProgressDialog mProgressDialog;
     Handler handler;
 
-    public DownloadFileAsync(Activity activity, Handler handler) {
+    public DownloadFileAsync(Context context, Handler handler) {
 
         this.handler = handler;
 
-        mProgressDialog = new ProgressDialog(activity);
+        mProgressDialog = new ProgressDialog(context);
         mProgressDialog.setTitle("正在下载");
         mProgressDialog.setMessage("下载进度...");
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);

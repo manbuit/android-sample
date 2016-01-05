@@ -3,10 +3,12 @@ package com.manbuit.android.fragment.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,8 +30,8 @@ import java.util.List;
  */
 public class StdListAdapter extends BaseAdapter {
     List<StdEntity> stdEntities = new ArrayList<StdEntity>();
-
     private LayoutInflater mInflater = null;
+
     public StdListAdapter(Context context, List<StdEntity> stdEntities){
         super();
         mInflater = (LayoutInflater) context
@@ -73,32 +75,49 @@ public class StdListAdapter extends BaseAdapter {
         return position;
     }
 
+    /**
+     * 参考：http://www.tuicool.com/articles/MJFNBfF
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder = null;
+        if(convertView == null) {
+//            convertView = mInflater.inflate(R.layout.std_list_item, null);
+//            convertView = mInflater.inflate(R.layout.std_list_item, parent, true); //java.lang.UnsupportedOperationException: addView(View, LayoutParams) is not supported in AdapterView
+            convertView = mInflater.inflate(R.layout.std_list_item, parent, false);
 
-        View view = convertView;
-        if(view == null) {
-            view = mInflater.inflate(R.layout.std_list_item, null);
+            holder = new ViewHolder();
+            holder.codeView = (TextView) convertView.findViewById(R.id.sliCode);
+            holder.nameView = (TextView) convertView.findViewById(R.id.sliName);
+            convertView.setTag(holder);
         }
-
-        TextView codeView = (TextView) ((LinearLayout)view).findViewById(R.id.sliCode);
-        TextView nameView = (TextView) ((LinearLayout)view).findViewById(R.id.sliName);
+        else {
+            holder = (ViewHolder) convertView.getTag();
+        }
 
         StdEntity stdEntity = (StdEntity) this.getItem(position);
-        codeView.setText(stdEntity.getCode());
-        //nameView.setText(String.format("《%s》",stdEntity.getName()));
-        nameView.setText(String.format("%s",stdEntity.getName()));
-        if(stdEntity.getStatus()!=null) {
-            if (stdEntity.getStatus().equals("作废")) {
-                codeView.setText(String.format("%s (%s)", stdEntity.getCode(), "作废"));
-                codeView.setTextColor(Color.rgb(255, 0, 0));
-                codeView.setText(String.format("%s (%s)", stdEntity.getCode(), "作废"));
-                //codeView.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            } else {
-                codeView.setTextColor(Color.rgb(0, 127, 0));
-            }
+        holder.nameView.setText(String.format("%s",stdEntity.getName()));
+        if(stdEntity.getStatus()!=null && stdEntity.getStatus().equals("作废")) {
+            //codeView.setTextColor(Color.rgb(255, 0, 0));
+            //codeView.setText(String.format("%s (%s)", stdEntity.getCode(), "作废"));
+            //codeView.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            //codeView.setText(Html.fromHtml(String.format("<font color='red'>%s (%s)</font>", stdEntity.getCode(), "作废")));
+            holder.codeView.setText(Html.fromHtml(String.format("<font color='red'><strong>%s</strong></font>", stdEntity.getCode())));
+            holder.codeView.setPaintFlags(holder.codeView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+        else {
+            holder.codeView.setText(Html.fromHtml(String.format("<font color='#007F00'><strong>%s</strong></font>", stdEntity.getCode())));
         }
 
-        return view;
+        return convertView;
+    }
+
+    private final class ViewHolder {
+        TextView codeView;
+        TextView nameView;
     }
 }

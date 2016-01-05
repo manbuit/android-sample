@@ -17,14 +17,12 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.manbuit.android.fragment.adapter.StdListAdapter;
 import com.manbuit.android.fragment.dataRequest.Column;
 import com.manbuit.android.fragment.dataRequest.DataRequest;
 import com.manbuit.android.fragment.dataRequest.DataRequestUnit;
 import com.manbuit.android.fragment.dataRequest.Filter;
+import com.manbuit.android.fragment.dataRequest.LoadData;
 import com.manbuit.android.fragment.dataRequest.OrderBy;
 import com.manbuit.android.fragment.model.StdEntity;
 
@@ -36,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AccountFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class AccountFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener, LoadData {
 //public class AccountFragment extends SwipeRefreshListFragment {
     final static int PAGE_SIZE = 50;
 
@@ -48,7 +46,7 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
     BaseAdapter adapter;
     List<StdEntity> stdEntities;
 
-    RequestQueue queue;
+    //RequestQueue queue;
 
     Toolbar toolbar;
     SearchView searchView;
@@ -92,7 +90,7 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
         }
     };
 
-    void loadData(int start, int limit, String searchText, final Handler handler) {
+    /*void loadData(int start, int limit, String searchText, final Handler handler) {
         if(start==0){
             stdEntities.clear();
         }
@@ -138,11 +136,74 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
 
         dataRequest.getNodes().put("data", data);
 
-        Request request = dataRequest.genRequest(
-                global,
-                loadDataHandler
-        );
-        queue.add(request);
+        dataRequest.request(global,loadDataHandler);
+    }*/
+
+    void loadData(int start, int limit, Bundle queryCond, final Handler handler) {
+        if(start==0){
+            stdEntities.clear();
+        }
+        accountLayout.setRefreshing(true);
+
+        final DataRequest dataRequest = new DataRequest();
+        DataRequestUnit data = new DataRequestUnit();
+
+        data.setDs("e1e89bf9-5924-5061-2834-9475d355355d");
+        data.setFields(Arrays.asList(
+                new Column("id"),
+                new Column("code"),
+                new Column("name"),
+                new Column("status")
+        ));
+        data.setOrderbies(Arrays.asList(
+                new OrderBy("category_orderNo", true),
+                new OrderBy("orderNo1", true),
+                new OrderBy("orderNo2", true),
+                new OrderBy("orderNo3", true)
+        ));
+        data.setStart(start);
+        data.setLimit(limit);
+
+        List<Filter> filters = new ArrayList<>();
+        filters.add(new Filter("orgId","string","!=","NULL",null));
+
+        if(queryCond!=null) {
+            String status = queryCond.getString("status");
+            String category = queryCond.getString("category");
+            String namecode = queryCond.getString("namecode");
+
+            if (namecode != null && namecode.trim().length() > 0) {
+                for (String seg : namecode.trim().replaceAll(" +", " ").split(" ")) {
+                    if (seg.length() > 0) {
+                        Filter filter = new Filter("or", null, null, null,
+                                Arrays.asList(
+                                        new Filter("code", "string", ">", "'" + seg + "'", null),
+                                        new Filter("name", "string", ">", "'" + seg + "'", null),
+                                        new Filter("category_name", "string", ">", "'" + seg + "'", null)
+                                )
+                        );
+                        filters.add(filter);
+                    }
+                }
+            }
+
+            if (status != null && status.length() > 0) {
+                filters.add(new Filter("status", "string", "=", "'" + status + "'", null));
+            }
+
+            if (category != null && category.length() > 0) {
+                filters.add(new Filter("category_name", "string", "=", "'" + category + "'", null));
+            }
+        }
+        data.setFilter(new Filter("and", null, null, null, filters));
+
+        dataRequest.getNodes().put("data", data);
+
+        dataRequest.request(global,loadDataHandler);
+    }
+
+    public void loadData(Bundle queryCond){
+        loadData(0, PAGE_SIZE, queryCond, loadDataHandler);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -169,27 +230,27 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
         adapter = new StdListAdapter(getActivity(),stdEntities);
         setListAdapter(adapter);
 
-        queue = Volley.newRequestQueue(getActivity());
+        //queue = Volley.newRequestQueue(getActivity());
 
         accountListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             private int lastItemIndex;//当前ListView中最后一个Item的索引
 
             @Override
             public void onScrollStateChanged(AbsListView arg0, int scrollState) {
-                System.out.println("onScrollStateChanged");
+                //System.out.println("onScrollStateChanged");
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
                         && lastItemIndex == adapter.getCount() - 1) {
-                    System.out.println(String.format("onScrollStateChanged LastVisiblePosition: %d", accountListView.getLastVisiblePosition()));
+                    //System.out.println(String.format("onScrollStateChanged LastVisiblePosition: %d", accountListView.getLastVisiblePosition()));
 
                     // TODO 这里需要"加载更多"的代码
-                    loadData(adapter.getCount(), PAGE_SIZE, searchView.getQuery().toString(), loadDataHandler);
+                    loadData(adapter.getCount(), PAGE_SIZE, ((MainActivity) getActivity()).queryConds.get(AccountFragment.class.getName()), loadDataHandler);
                 }
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 lastItemIndex = firstVisibleItem + visibleItemCount - 1;
-                System.out.println(String.format("onScroll LastVisiblePosition: %d", accountListView.getLastVisiblePosition()));
+                //System.out.println(String.format("onScroll LastVisiblePosition: %d", accountListView.getLastVisiblePosition()));
                 /*if (accountListView.getCount() != 0
                         && accountListView.getLastVisiblePosition() >= (accountListView.getCount() - 1) - 2) {
                     // Do what you need to get more content.
@@ -224,25 +285,25 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText==null || newText.trim().length()==0){
+                if (newText == null || newText.trim().length() == 0) {
                     doSearch(null);
                 }
                 return true;
             }
         });
 
-        loadData(0, PAGE_SIZE, searchView.getQuery().toString(), loadDataHandler);
+        loadData(0, PAGE_SIZE, ((MainActivity) getActivity()).queryConds.get(AccountFragment.class.getName()), loadDataHandler);
 
     }
 
     private void doSearch(String inputText) {
         stdEntities.clear();
-        loadData(0, PAGE_SIZE, searchView.getQuery().toString(), loadDataHandler);
+        loadData(0, PAGE_SIZE, ((MainActivity) getActivity()).queryConds.get(AccountFragment.class.getName()), loadDataHandler);
     }
 
     @Override
     public void onRefresh() {
-        loadData(0, PAGE_SIZE, searchView.getQuery().toString(), loadDataHandler);
+        loadData(0, PAGE_SIZE, ((MainActivity) getActivity()).queryConds.get(AccountFragment.class.getName()), loadDataHandler);
     }
 
     @Override
@@ -286,5 +347,11 @@ public class AccountFragment extends ListFragment implements SwipeRefreshLayout.
                 searchView.setQuery(searchView.getQuery(), true);
             }*/
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Toast.makeText(getActivity(),"resume", Toast.LENGTH_SHORT).show();
     }
 }

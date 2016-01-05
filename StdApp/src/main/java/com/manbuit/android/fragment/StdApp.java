@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.Iconics;
 
@@ -27,6 +29,12 @@ public class StdApp extends Application {
         this.myContext = context;
     }
 
+    private RequestQueue requestQueue;
+
+    public RequestQueue getRequestQueue(){
+        return this.requestQueue;
+    }
+
     @Override
     public void onCreate() {
         // TODO Auto-generated method stub
@@ -35,6 +43,7 @@ public class StdApp extends Application {
 
         sp = getSharedPreferences("mysp", Context.MODE_PRIVATE);
 
+        this.requestQueue = Volley.newRequestQueue(this);
 
         //only required if you add a custom or generic font on your own
         Iconics.init(getApplicationContext());
