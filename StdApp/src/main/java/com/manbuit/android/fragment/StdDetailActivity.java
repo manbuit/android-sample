@@ -377,7 +377,8 @@ public class StdDetailActivity extends AppCompatActivity {
 
                 //加载标准信息
                 DataRequestUnit stdInfo = new DataRequestUnit();
-                stdInfo.setDs("12814070-5537-b95c-e4f9-abfc0d460765");
+                //stdInfo.setDs("12814070-5537-b95c-e4f9-abfc0d460765");
+                stdInfo.setDs("93f73171-4d43-9264-5439-eec44763003a");
                 stdInfo.setFilter(new Filter("id", "string", "=", "'" + stdId + "'", null));
                 dataRequest.getRoot().add(stdInfo);
 
@@ -396,12 +397,12 @@ public class StdDetailActivity extends AppCompatActivity {
                         )
                 );
                 favorite.setFilter(
-                        new Filter("and",null,null,null,
-                            Arrays.asList(
-                                    new Filter("owner","string","=",  String.format("'%s'",global.getMyContext().get("userId").toString()) ,null),
-                                    new Filter("std","string","=", String.format("'%s'",stdId) ,null)
-                            )
-                    )
+                        new Filter("and", null, null, null,
+                                Arrays.asList(
+                                        new Filter("owner", "string", "=", String.format("'%s'", global.getMyContext().get("userId").toString()), null),
+                                        new Filter("std", "string", "=", String.format("'%s'", stdId), null)
+                                )
+                        )
                 );
                 dataRequest.getRoot().add(favorite);
 

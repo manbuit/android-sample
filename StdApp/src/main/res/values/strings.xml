@@ -16,7 +16,7 @@
 
     <!-- 服务端参数：主机和端口的缺省设置在StdApp的DEFAULT_INDEX -->
     <!-- 正式环境 -->
-    <string name="r_server_host_p">222.190.98.24</string>
+    <string name="r_server_host_p">218.94.80.90</string>
     <string name="r_server_port_p">8099</string>
     <!-- 测试环境 -->
     <string name="r_server_host_t">222.190.98.24</string>
