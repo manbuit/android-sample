@@ -125,8 +125,9 @@ public class LoginActivity extends AppCompatActivity {
 
         mUsernameView = (EditText) findViewById(R.id.username);
         mPasswordView = (EditText) findViewById(R.id.password);
-        
-        restoreUsernameAndPassword();
+
+        String i_userName = getIntent().getStringExtra("userName");
+        String i_passWord = getIntent().getStringExtra("passWord");
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -152,6 +153,15 @@ public class LoginActivity extends AppCompatActivity {
 
         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);;
         UpdateAPK.update(LoginActivity.this, false);
+
+        if(!TextUtils.isEmpty(i_userName)){
+            mUsernameView.setText(i_userName);
+            mPasswordView.setText(i_passWord);
+            this.attemptLogin();
+        }
+        else{
+            restoreUsernameAndPassword();
+        }
     }
 
     /*@Override
@@ -288,7 +298,11 @@ public class LoginActivity extends AppCompatActivity {
                 protected Map<String, String> getParams() {
                     //在这里设置需要post的参数
                     Map<String, String> map = new HashMap<String, String>();
-                    map.put("username", username);
+                    map.put("username",
+                            (!username.toLowerCase().equals("suadmin") && !username.toLowerCase().equals("admin") && !username.contains("@jsciq.gov.cn"))
+                                    ? String.format("%s@jsciq.gov.cn",username)
+                                    : username
+                    );
                     map.put("password", password);
                     return map;
                 }

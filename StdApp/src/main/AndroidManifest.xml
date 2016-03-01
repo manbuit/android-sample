@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.manbuit.android.fragment"
-    android:versionName="1.0.160226.1443-P"
+    android:versionName="1.0.160301.1048-P"
     android:versionCode="1"
     >
 
@@ -29,7 +29,6 @@
             android:label="@string/app_name" ><!--android:noHistory="true"-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -93,7 +93,7 @@ public class UpdateAPK {
                                                     }
                                                 }
                                         );
-                                        String urlString = String.format(global.getFileDownloadUrl()+"/%s;jsessionid=%s",apkFileId,global.getMyContext().get("token"));
+                                        String urlString = String.format(global.getFileDownloadUrl()+"/%s.apk;jsessionid=%s",apkFileId,global.getMyContext().get("token"));
                                         task.execute(urlString,String.format("stdApp_%s.apk",rev));
                                     }
                                 });
