@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.manbuit.android.fragment"
-    android:versionName="1.0.160301.1048-P"
+    android:versionName="1.0.160316.1528-P"
     android:versionCode="1"
     >
 

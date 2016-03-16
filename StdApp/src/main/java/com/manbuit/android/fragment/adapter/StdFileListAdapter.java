@@ -78,7 +78,8 @@ public class StdFileListAdapter extends BaseAdapter {
         TextView nameView = (TextView) ((LinearLayout)view).findViewById(R.id.sliFileName);
 
         StdFileEntity stdFileEntity = (StdFileEntity) this.getItem(position);
-        nameView.setText(stdFileEntity.getName());
+        //nameView.setText(stdFileEntity.getName());
+        nameView.setText(String.format("《%s》 （%.2fM）",stdFileEntity.getName(),stdFileEntity.getSize()/1024.0/1024.0));
 
         return view;
     }
