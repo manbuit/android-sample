@@ -437,6 +437,8 @@ public class StdDetailActivity extends AppCompatActivity {
             }
         }).start();
 
+        setHitCount(stdId); // 标准点击次数加1
+
         //电子标准点击打开
         tvFiles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -531,5 +533,50 @@ public class StdDetailActivity extends AppCompatActivity {
         });
     }
 
+    private void setHitCount(String stdId){
+        try {
+            JSONObject hitCountReq = new JSONObject();
+            hitCountReq.put("_method", "PATCH");
+            hitCountReq.put("ds", "93f73171-4d43-9264-5439-eec44763003a");
+            hitCountReq.put("id", stdId);
+
+            Map<String,Object> fieldValues = new LinkedHashMap<String, Object>();
+            fieldValues.put("hitCount", 1);
+            JSONObject data = new JSONObject(fieldValues);
+            hitCountReq.put("data",data);
+
+            final JSONArray dr = new JSONArray();
+            dr.put(hitCountReq);
+
+            String url = String.format("%s;jsessionid=%s", global.getDataUpdateUrl(), global.getMyContext().get("token").toString());
+            Request request = new StringRequest(
+                    Request.Method.POST,
+                    url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String s) {
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                        }
+                    }
+            ){
+                @Override
+                protected Map<String, String> getParams() {
+                    //在这里设置需要post的参数
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("dr", dr.toString());
+                    return map;
+                }
+            };
+            global.getRequestQueue().add(request);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }

@@ -36,6 +36,7 @@ public class FileUtils {
         //得到当前外部存储设备的目录
         // /SDCARD
         SDPATH = Environment.getExternalStorageDirectory() + "/";
+        //SDPATH = Environment.getDownloadCacheDirectory().getPath() + "/";
     }
     /**
      * 在SD卡上创建文件

@@ -111,7 +111,9 @@ public class DataRequest {
                             //Toast.makeText(getActivity(),data.get("totalCount").toString(),Toast.LENGTH_SHORT).show();
                             Message msg = new Message();
                             msg.obj = result;
-                            handler.sendMessage(msg);
+                            if(handler!=null) {
+                                handler.sendMessage(msg);
+                            }
                         }
                         catch (Exception e){
                             e.printStackTrace();
